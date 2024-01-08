@@ -6,7 +6,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 
 const NavBar = () => {
-    const  [navbar,setNavbar] = useState<Boolean>(false)
+    
 
   return (
     <nav className='fixed w-full h-24 shadow-xl bg-white'>
