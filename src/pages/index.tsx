@@ -1,15 +1,14 @@
 import Head from "next/head";
-import { api } from "~/utils/api";
-import Link from "next/link";
+import PostIntroduction from "./components/PostIntroduction";
 
 export default function Home() {
   // const [item,setItems]= useState <ShoppingItem[]>
-  const { data: secretMessage } = api.post.getSecretMessage.useQuery()
-  const createUser = api.post.create.useMutation()
-  const handleButton =() =>{
-    const name ='ThanhLong510'
-    createUser.mutate({name})
-  }
+  // const { data: secretMessage } = api.post.getSecretMessage.useQuery()
+  // const createUser = api.post.create.useMutation()
+  // const handleButton =() =>{
+  //   const name ='ThanhLong510'
+  //   createUser.mutate({name})
+  // }
   return (
     <>
     <div className="max-w-7xl mx-auto">
@@ -30,25 +29,8 @@ export default function Home() {
           </div>
      
         </div>
-
-        {/* POST */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 md:gap-6 p-2 md:p-6 ">
-          <Link href={`post/testStory`}>
-            <div className="group border rounded-lg cursor-pointer overflow-hidden">
-              <img
-                className="h-60 w-full object-cove group-hover:scale-105 transition-transform duration-200 ease-in-out"
-                src="screen.jpg"
-              />
-              <div className="flex justify-between p-5 bg-white">
-                <div>
-                  <p>This is my first post</p>
-                  <p>Post Description by Long Nguyen</p>
-                </div>
-                <img className="h-12 w-12 rounded-full" src="/avatar.jpg"/>
-              </div>
-            </div>
-          </Link>
-        </div>
+        
+        <PostIntroduction/>
       </>
       </div>
     </>
