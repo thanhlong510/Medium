@@ -2,10 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { RouterOutputs } from '~/utils/api';
 
-
-
 type inputType =  RouterOutputs['post']['getPosts']
-
 //
 const PostIntroduction  = ({ post }: { post:inputType }) => {
    return (
@@ -22,13 +19,13 @@ const PostIntroduction  = ({ post }: { post:inputType }) => {
                 <div>
                   <p>{a.title}</p>
                   <p>{a.description} by {a.user.name}</p>
-                </div>
+              </div>
                 <img className="h-12 w-12 rounded-full" src={`${a.user?.image}`}/>
               </div>
             </div>
           </Link>
       })}  
-        </div>
+    </div>
   )
 }
 
