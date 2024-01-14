@@ -1,14 +1,10 @@
 import Head from "next/head";
 import PostIntroduction from "./components/PostIntroduction";
+import { api } from "~/utils/api";
 
 export default function Home() {
-  // const [item,setItems]= useState <ShoppingItem[]>
-  // const { data: secretMessage } = api.post.getSecretMessage.useQuery()
-  // const createUser = api.post.create.useMutation()
-  // const handleButton =() =>{
-  //   const name ='ThanhLong510'
-  //   createUser.mutate({name})
-  // }
+  const {data} = api.post.getPosts.useQuery()
+  if(!data) return;
   return (
     <>
     <div className="max-w-7xl mx-auto">
@@ -28,9 +24,8 @@ export default function Home() {
             </h2>
           </div>
      
-        </div>
-        
-        <PostIntroduction/>
+        </div> 
+         <PostIntroduction post={data}/>
       </>
       </div>
     </>

@@ -2,12 +2,13 @@ import Link from 'next/link'
 import React from 'react'
 import { signIn, signOut, useSession } from "next-auth/react";
 const Header = () => {
-    const { data: sessionData, status } = useSession();
+    const { status } = useSession();
   return (
     <header className='flex justify-between p-5 max-w-7xl  mx-auto'>
         <div className='flex'>
             <Link href="/">
-                <img
+                <img  
+                    alt=''
                     className='w-44 object-contain cursor-pointer'
                     src='/Medium_(website)_logo.svg'
                 />

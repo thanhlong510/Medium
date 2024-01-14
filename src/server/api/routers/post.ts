@@ -1,85 +1,77 @@
 import { z } from "zod";
-
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { S3Client } from "@aws-sdk/client-s3";
-import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
-import { v4 as uuidv4 } from "uuid";
-import { TRPCError } from "@trpc/server";
-const s3Client = new S3Client({
-  region: "us-east-1",
-  endpoint: "http://localhost:9000",
-  forcePathStyle: true,
+import { Storage } from '@google-cloud/storage';
+
+const storage = new Storage({
   credentials: {
-    accessKeyId: "S3RVER",
-    secretAccessKey: "S3RVER",
+    client_email: 'cloudstorage@sortable-ai.iam.gserviceaccount.com',
+    private_key: process.env.SECRET_FOR_LONG,
   },
+  projectId: 'sortable-ai',
 });
+const file = storage.bucket('medium-blog-project').file('Anh_The.jpg');
+const [signedUrl] = await file.getSignedUrl({
+    action: 'read',
+    expires: Date.now() + 300 * 1000,
+  });
+
 export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
+  getPosts: publicProcedure.query(({ ctx }) => {
+   return ctx.db.post.findMany({
+      take:3,
+      select:{
+        content:true,
+        description:true,
+        title:true,
+        postId:true,
+        user: {
+          select:{name:true}
+        }
+      }
+    });
+  }),
+
+  getPostById: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      return ctx.db.post.findUnique({
+        where: {
+          postId: input.postId,
+        }
+      });
     }),
-  //   createPresignedUrl: protectedProcedure
-  //   .input(z.object({ courseId: z.string() }))
-  //   .mutation(async ({ ctx, input }) => {
-  //     // const userId = ctx.session.user.id;
-  //     const course = await ctx.db.post.findUnique({
-  //       where: {
-  //         id: input.courseId,
-  //       },
-  //     });
+  isEdit:protectedProcedure
+  .input(
+    z.object({
+      postId:z.string()
+    })
+  )
+  .query(({ctx,input})=>{
 
-  //     if (!course) {
-  //       throw new TRPCError({
-  //         code: "NOT_FOUND",
-  //         message: "the course does not exist",
-  //       });
-  //     }
-  //     const imageId = uuidv4();
-  //     await ctx.db.post.update({
-  //       where: {
-  //         id: course.id,
-  //       },
-  //       data: {
-  //         imageId,
-  //       },
-  //     });
-
-  //     return createPresignedPost(s3Client, {
-  //       Bucket: env.NEXT_PUBLIC_S3_BUCKET_NAME,
-  //       Key: imageId,
-  //       Fields: {
-  //         key: imageId,
-  //       },
-  //       Conditions: [
-  //         ["starts-with", "$Content-Type", "image/"],
-  //         ["content-length-range", 0, 100000],
-  //       ],
-  //     });
-  //   }),
-  create: publicProcedure
-    .input(z.object({ name: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const {name} = input   
-      const item = await ctx.db.users.create({
+  }),
+  // edit
+  // getImage
+  // editImage
+  create: protectedProcedure
+    .input(z.object({ description: z.string(), title:z.string(), content:z.string()  }))
+    .mutation(async ({ ctx, input }) => {
+      const item = await ctx.db.post.create({
         data: {
-          name,
+          userID:ctx.session.user.id,
+          title:input.title,
+          description:input.description,
+          content:input.content,
         }
       })
       return item
     }),
-    
-  getLatest: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.users.findMany()  
-  }),
-  getSecretMessage: protectedProcedure.query(() => {
-    return "Hello Nam! This text comes from tRPC";
-  }),
+  
 });

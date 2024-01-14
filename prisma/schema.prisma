@@ -1,6 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,31 +10,26 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model Users {
-    id   String  @id @default(cuid())
-    name String 
-    checked Boolean @default(false)
-}
+
 model Post {
-    id        String     @id @default(cuid())
-    name      String
+    postId        String     @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     title       String
-    user   User   @relation(fields: [userID], references: [id])
-    userID String
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
     imageId     String    @default("")
     description String
     content String
-    @@index([name])
+    @@index([userId])
 }
-// model P {
-//     id          String    @id @default(cuid())
-//     user User      @relation(fields: [userId], references: [id])
-//     userId      String
-//     title       String
+// model Tweet {
+//     id String @id @default(cuid())
+//     title String
 //     description String
-//     imageId     String    @default("")
+//     use User @relation(fields: [userID],references: [id])
+//     userID String
+//     @@index([userID])
 // }
 // Necessary for Next auth
 model Account {
@@ -71,6 +67,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+
 }
 
 model VerificationToken {
