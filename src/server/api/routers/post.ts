@@ -29,7 +29,9 @@ export const postRouter = createTRPCRouter({
         title:true,
         postId:true,
         user: {
-          select:{name:true}
+          select:{name:true,
+          image:true
+          }
         }
       }
     });
@@ -45,9 +47,23 @@ export const postRouter = createTRPCRouter({
       return ctx.db.post.findUnique({
         where: {
           postId: input.postId,
+        },
+        select:{
+          user:{
+            select:{name:true,
+            image:true
+            }
+          },
+          createdAt:true,
+          description:true,
+          title:true,
+          content:true,
+          postId:true,
+          userID:true,
         }
       });
     }),
+
   isEdit:protectedProcedure
   .input(
     z.object({

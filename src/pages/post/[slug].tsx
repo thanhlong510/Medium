@@ -11,7 +11,7 @@ const Post = () => {
         return <div>Error</div>;
       }
     const {data}=api.post.getPostById.useQuery({postId:slug})
-      
+    console.log(data?.user.image)
   return (
     <div>   
         <article className='max-w-3xl mx-auto p-5'>
@@ -23,11 +23,11 @@ const Post = () => {
             </h2>
             <div className='flex items-center space-x-2'>
                 <img
-                    src='/avatar.jpg'
+                    src={`${data?.user.image}`}
                     className='h-10 w-10 rounded-full'
                 />
                 <p className='font-extralight text-sm'>
-                    Blog post by Long Nguyen - Publish at 9/1/2023
+                    Blog post by  - Publish at 9/1/2023
                 </p>
                 <button>
                     Edit

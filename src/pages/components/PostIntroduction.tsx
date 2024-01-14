@@ -6,8 +6,7 @@ import { RouterOutputs } from '~/utils/api';
 
 type inputType =  RouterOutputs['post']['getPosts']
 
-// 
-
+//
 const PostIntroduction  = ({ post }: { post:inputType }) => {
    return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 md:gap-6 p-2 md:p-6 ">
@@ -22,9 +21,9 @@ const PostIntroduction  = ({ post }: { post:inputType }) => {
               <div className="flex justify-between p-5 bg-white">
                 <div>
                   <p>{a.title}</p>
-                  <p>{a.description} by </p>
+                  <p>{a.description} by {a.user.name}</p>
                 </div>
-                <img className="h-12 w-12 rounded-full" src="/avatar.jpg"/>
+                <img className="h-12 w-12 rounded-full" src={`${a.user?.image}`}/>
               </div>
             </div>
           </Link>
