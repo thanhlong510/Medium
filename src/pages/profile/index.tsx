@@ -2,17 +2,22 @@ import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import PostIntroduction from "../components/PostIntroduction";
 
+
 const ProfilePage = () => {
   const { data: session } = useSession();
+  const userId = session?.user?.id;
 
+  if (!userId) {
+    return <p>No session or user id available.</p>;
+  }
   const { data } = api.post.getPostbyUserId.useQuery({
-    userId : session!.user?.id
+    userId : userId ?? '' 
   });
-  
+
   return (
     <div className="flex items-start justify-center p-8">
       <div className="mr-4 flex-shrink-0">
-        <img src={`${session?.user.image}`} alt="" className="h-32 w-32 rounded-full" />
+        <img src={`${session?.user.image}`} alt={``} className="h-32 w-32 rounded-full" />
       </div>
       <div className="flex flex-col">
         <h1 className="text-3xl font-bold">{session?.user.name}</h1>

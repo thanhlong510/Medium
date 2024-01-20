@@ -184,4 +184,24 @@ export const postRouter = createTRPCRouter({
       });
       return section;
     }),
+  
+  getProfilebyUserId: publicProcedure
+  .input(z.object({userId:z.string()}))
+  .query(({ ctx, input }) => {
+    return ctx.db.profile.findFirst({
+      where: {
+        userId:input.userId
+      },
+      select:{
+        image: true,
+        user:{
+          select:{
+            name:true,
+            email:true,
+            image:true
+          }
+        }
+      }
+    });
+  }),
 });
