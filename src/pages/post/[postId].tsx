@@ -24,6 +24,7 @@ const Post = () => {
         <div className="flex items-center justify-between space-x-12 ">
           <div className="flex items-center  space-x-4">
             <img
+              alt=""
               src={`${data?.user.image}`}
               className="h-10 w-10 rounded-full"
             />

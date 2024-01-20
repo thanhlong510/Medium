@@ -61,7 +61,7 @@ export const postRouter = createTRPCRouter({
         }),
       }),
     )
-    .query(async ({  input }) => {
+    .query(async ({ input }) => {
       const imageUrl = await uploadImageToGCS(
         input.file.fileName,
         input.file.filePath,
@@ -130,55 +130,29 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
-  isEdit: protectedProcedure
+  update: protectedProcedure
     .input(
       z.object({
+        description: z.string(),
+        title: z.string(),
+        content: z.string(),
         postId: z.string(),
       }),
     )
-    .query(({ ctx, input }) => {
-      const a = ctx.db.post.findUnique({
+    .mutation(async ({ ctx, input }) => {
+      const item = await ctx.db.post.update({
         where: {
           postId: input.postId,
         },
-        select: {
-          user: {
-            select: {
-              id: true,
-            },
-          },
+        data: {
+          title: input.title,
+          description: input.description,
+          content: input.content,
         },
       });
-      const b = ctx.session.user.id;
-      const c = b.toString();
-      if (b == c) return true;
-      return false;
-    }),
 
-  // edit
-  // getImage
-  // editImage
-  update:protectedProcedure
-  .input(z.object({
-    description: z.string(),
-    title: z.string(),
-    content: z.string(),
-    postId: z.string()
-  }))
-  .mutation(async ({ ctx, input }) => {
-    const item = await ctx.db.post.update({
-      where:{
-        postId:input.postId
-      },
-      data:{
-        title:input.title,
-        description:input.description,
-        content:input.content
-      }
-    });
-    
-    return item;
-  }),
+      return item;
+    }),
 
   create: protectedProcedure
     .input(
@@ -203,15 +177,6 @@ export const postRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ postId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const post = await ctx.db.post.findUnique({
-        where: {
-          postId: input.postId,
-        },
-        select: {
-          userId: true,
-        },
-      });
-
       const section = await ctx.db.post.delete({
         where: {
           postId: input.postId,

@@ -16,9 +16,9 @@ const EditPage = () => {
     },
     {
       onSuccess(data) {
-        setTitle(data?.title as string);
-        setContent(data?.content as string);
-        setDescription(data?.description as string);
+        setTitle(data!.title);
+        setContent(data!.content );
+        setDescription(data!.description );
       },
     },
   );

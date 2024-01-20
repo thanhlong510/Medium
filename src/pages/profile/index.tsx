@@ -6,7 +6,7 @@ const ProfilePage = () => {
   const { data: session } = useSession();
 
   const { data } = api.post.getPostbyUserId.useQuery({
-    userId : session!.user?.id as string
+    userId : session!.user?.id
   });
   
   return (
