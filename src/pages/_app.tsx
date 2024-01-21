@@ -15,7 +15,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <Header/>
         <Component {...pageProps} />
       </div>
-      
     </SessionProvider>
   );
 };

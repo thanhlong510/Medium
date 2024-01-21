@@ -9,8 +9,8 @@ const PostIntroduction = ({ post }: { post: inputType }) => {
   return (
     <div className="grid grid-cols-1 space-x-1  p-2 sm:grid-cols-2 md:gap-6 md:p-6 lg:grid-cols-3 ">
       {post?.map((a) => {
-        return (
-          <Link key={a?.postId} href={`post/${a?.postId}`}>
+        return ( 
+          <Link key={a?.postId} href={`/post/${a?.postId}`}>
             <div className="group min-h-[364px] cursor-pointer overflow-hidden rounded-lg border  ">
               <img
                 key={a?.title}

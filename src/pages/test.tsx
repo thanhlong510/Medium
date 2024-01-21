@@ -7,25 +7,14 @@ interface FileObject {
 }
 
 const Test = () => {
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
+ const {data:a}= api.profile.getProfilebyUserId.useQuery({
+  userId:'clrn2bi800002em2d4ch8l01a'
+ })
 
-    if (file) {
-      console.log(file);
-      const fileObject: FileObject = {
-        filePath: file.name,
-        fileName: file.name,
-      };
-      const b = api.post.uploadImageTRPC.useQuery({ file: fileObject });
-      console.log(b);
-    }
-  };
 
   return (
     <div>
-      <input type="file" onChange={handleFileChange} />
+
       <ToolTip postId="clrlvvzmt000g6p9vciy64syi" />
     </div>
   );

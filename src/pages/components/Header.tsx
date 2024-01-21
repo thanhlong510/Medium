@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 import { signIn, signOut, useSession } from "next-auth/react";
 const Header = () => {
-    const { status } = useSession();
+    const {data:session, status } = useSession();
     console.log()
   return (
     <header className='flex justify-between p-5 max-w-7xl  mx-auto'>
@@ -16,7 +16,7 @@ const Header = () => {
             </Link>
             <div className='hidden md:inline-flex items-center space-x-5 ml-5'>
             <h3> About</h3>
-            {status=='authenticated'?<Link href={`/profile`}> <h3> Profile</h3></Link>:<h3>Contact</h3>} 
+            {status=='authenticated'?<Link href={`/profile/${session.user.id}`}> <h3> Profile</h3></Link>:<h3>Contact</h3>} 
             <h3 className='text-white bg-green-600 px-4 py-1 rounded-full'> Follow</h3>
             </div>
         </div>

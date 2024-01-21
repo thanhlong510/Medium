@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { api } from "~/utils/api";
 import ToolTip from "../components/ToolTip";
+import Link from "next/link";
 
 const Post = () => {
   const router = useRouter();
@@ -13,7 +14,7 @@ const Post = () => {
   });
   const data = postQuery.data;
   if (!data) return;
-
+  
   return (
     <div>
       <article className="mx-auto max-w-3xl p-5">
@@ -22,20 +23,27 @@ const Post = () => {
           {data?.description}
         </h2>
         <div className="flex items-center justify-between space-x-12 ">
-          <div className="flex items-center  space-x-4">
-            <img
-              alt=""
-              src={`${data?.user.image}`}
-              className="h-10 w-10 rounded-full"
-            />
-            <div>
-              <p className="text-sm font-extralight">{data?.user.name}</p>
-              <p className="text-[#6B6B6B]">Published at</p>
+          <Link href={`/profile/${data.userId}`}>
+            <div className="flex items-center  space-x-4">
+              <img
+                alt=""
+                src={`${data?.user.image}`}
+                className="h-10 w-10 rounded-full"
+              />
+              <div>
+                <p className="text-sm font-extralight">{data?.user.name}</p>
+                <p className="text-[#6B6B6B]">Published at</p>
+              </div>
             </div>
-          </div>
+          </Link>
+
           {session?.user.id == data?.user.id ? <ToolTip postId={postId} /> : ""}
         </div>
-        <img src="/screen.jpg" alt="" className="my-5 h-80 w-full object-cover" />
+        <img
+          src="/screen.jpg"
+          alt=""
+          className="my-5 h-80 w-full object-cover"
+        />
         <div>
           <p>{data?.content}</p>
         </div>

@@ -69,7 +69,7 @@ export const postRouter = createTRPCRouter({
       return { imageUrl };
     }),
 
-  getPostbyUserId: protectedProcedure
+  getPostbyUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.db.post.findMany({
