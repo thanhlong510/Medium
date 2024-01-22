@@ -10,17 +10,12 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Profile {
-    postId      String   @id @default(cuid())
-    user        User     @relation(fields: [userId], references: [id])
-    userId      String  
-    image     String?   @default("")
-    bio String?
-    @@index([userId])
-}
+
 model Bio{
-      id                String  @id @default(cuid())
-      bio String @default("")
+    id     String  @id @default(cuid())
+    user   User @relation(fields: [userId], references: [id])
+    userId String  @unique
+    bio String
 }
 model Post {
     postId      String   @id @default(cuid())
@@ -32,9 +27,12 @@ model Post {
     imageId     String   @default("")
     description String
     content     String
+    hide Boolean @default(false)
     @@index([userId])
 }
 
+
+// Next Auth
 model Account {
     id                String  @id @default(cuid())
     userId            String
@@ -69,7 +67,8 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
-    profile       Profile[]
+    bio Bio?
+
 }
 
 model VerificationToken {

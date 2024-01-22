@@ -75,6 +75,7 @@ export const postRouter = createTRPCRouter({
       return ctx.db.post.findMany({
         where: {
           userId: input.userId,
+          hide:false
         },
         select: {
           user: {
@@ -92,6 +93,9 @@ export const postRouter = createTRPCRouter({
 
   getPosts: publicProcedure.query(({ ctx }) => {
     return ctx.db.post.findMany({
+      where:{
+        hide:false
+      },
       take: ALL,
       select: {
         content: true,
@@ -184,24 +188,30 @@ export const postRouter = createTRPCRouter({
       });
       return section;
     }),
-  
-  getProfilebyUserId: publicProcedure
-  .input(z.object({userId:z.string()}))
-  .query(({ ctx, input }) => {
-    return ctx.db.profile.findFirst({
-      where: {
-        userId:input.userId
-      },
-      select:{
-        image: true,
-        user:{
-          select:{
-            name:true,
-            email:true,
-            image:true
-          }
+    hidePost: protectedProcedure
+    .input(z.object({postId:z.string()}))
+    .mutation(async ({ ctx, input }) => {
+      const section = await ctx.db.post.update({
+        where: {
+          postId: input.postId,
+        },
+        data:{
+          hide:true
         }
-      }
-    });
-  }),
+      });
+      return section;
+    }),
+    unHidePost: protectedProcedure
+    .input(z.object({postId:z.string()}))
+    .mutation(async ({ ctx, input }) => {
+      const section = await ctx.db.post.update({
+        where: {
+          postId: input.postId,
+        },
+        data:{
+          hide:false
+        }
+      });
+      return section;
+    }),
 });

@@ -5,7 +5,9 @@ const Header = () => {
     const {data:session, status } = useSession();
     console.log()
   return (
-    <header className='flex justify-between p-5 max-w-7xl  mx-auto'>
+    <div>
+      <div className='fixed border-b border-solid bg-yellow-400 border-[#242424] z-10 w-full mx-auto top-0 left-0 right-0'>
+        <header className=' flex  justify-between p-5 max-w-7xl z-10  mx-auto'>
         <div className='flex'>
             <Link href="/">
                 <img  
@@ -27,6 +29,13 @@ const Header = () => {
         </div>
         
     </header>
+    </div>
+    <div className='h-[75px]'>
+
+    </div>
+    </div>
+    
+    
   )
 }
 function AuthShowcase() {

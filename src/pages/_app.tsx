@@ -11,7 +11,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <div className="max-w-7xl mx-auto">
+      <div className="w-screen mx-auto">
         <Header/>
         <Component {...pageProps} />
       </div>

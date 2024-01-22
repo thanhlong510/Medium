@@ -1,11 +1,14 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { Storage } from "@google-cloud/storage";
 
 const storage = new Storage({
   credentials: {
     client_email: "cloudstorage@sortable-ai.iam.gserviceaccount.com",
-    private_key: process.env.SECRET_FOR_LONG
+    private_key: process.env.SECRET_FOR_LONG,
   },
   projectId: "sortable-ai",
 });
@@ -16,54 +19,82 @@ export const profileRouter = createTRPCRouter({
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       return ctx.db.user.findUnique({
-        where:{
-            id:input.userId
+        where: {
+          id: input.userId,
         },
-        select:{
-            name:true,
-            image:true,
-            email:true,
-        }
-
-      })
-      
+        select: {
+          name: true,
+          image: true,
+          email: true,
+        },
+      });
     }),
-
-    uploadImage: protectedProcedure
-    .input(
-      z.object({
-        file: z.string(), // Change the type to string
-      })
-    )
+  createBio: publicProcedure
+    .input(z.object({ userId: z.string(), bio: z.string() }))
+    .mutation(({ ctx, input }) => {
+      const bioData = ctx.db.bio.findUnique({
+        where: {
+          userId: input.userId,
+        },
+      });
+      if (bioData !== null) {
+        return ctx.db.bio.create({
+          data: {
+            userId: input.userId,
+            bio: input.bio,
+          },
+        });
+      } else {
+        return ctx.db.bio.update({
+          where: {
+            userId: input.userId,
+          },
+          data: {
+            bio: input.bio,
+          },
+        });
+      }
+    }),
+  getBio: publicProcedure
+    .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      // Now you can directly use input.file as a string (file path or URL)
-      const imagePath = input.file;
-      const uploadResult = await uploadImageToGCP(imagePath);
-
-      // Save the image URL or any other relevant information to your database
-      // For example, you can save the image URL to the user's profile in the database
-
-      return { success: true, imageUrl: uploadResult };
+      return ctx.db.bio.findUnique({
+        where: {
+          userId: input.userId,
+        },
+        select: {
+          bio: true,
+          user: {
+            select: {
+              email: true,
+              name: true,
+              image: true,
+            },
+          },
+        },
+      });
     }),
 });
 
 // Helper function to upload an image to GCP Storage
-async function uploadImageToGCP(imagePath: string): Promise<string> {
-  const bucket = storage.bucket(bucketName);
-  const uniqueFileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}_${imagePath}`;
-  const file = bucket.file(uniqueFileName);
+// async function uploadImageToGCP(imagePath: string): Promise<string> {
+//   const bucket = storage.bucket(bucketName);
+//   const uniqueFileName = `${Date.now()}_${Math.floor(
+//     Math.random() * 1000,
+//   )}_${imagePath}`;
+//   const file = bucket.file(uniqueFileName);
 
-  await file.save(imagePath, {
-    metadata: {
-      contentType: "image/jpeg", // Set the appropriate content type for your image
-    },
-  });
+//   await file.save(imagePath, {
+//     metadata: {
+//       contentType: "image/jpeg", // Set the appropriate content type for your image
+//     },
+//   });
 
-  // Make the file publicly accessible
-  await file.makePublic();
+//   // Make the file publicly accessible
+//   await file.makePublic();
 
-  // Get the public URL of the uploaded file
-  const imageUrl = `https://storage.googleapis.com/${bucketName}/${uniqueFileName}`;
+//   // Get the public URL of the uploaded file
+//   const imageUrl = `https://storage.googleapis.com/${bucketName}/${uniqueFileName}`;
 
-  return imageUrl;
-}
+//   return imageUrl;
+// }

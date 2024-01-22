@@ -4,19 +4,24 @@ import "tippy.js/dist/tippy.css";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { api } from "~/utils/api";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface TooltipProps {
   onEditClick: () => void;
   onDeleteClick: () => void;
   postId: string;
+  userId:string;
 }
 
 const CustomTooltip: React.FC<TooltipProps> = ({
   onEditClick,
   onDeleteClick,
   postId,
+  userId
 }) => {
+  const router = useRouter()
   const deletePost = api.post.delete.useMutation();
+  const hidePost = api.post.hidePost.useMutation()
   return (
     <div className="flex bg- flex-col">
       <div>
@@ -42,16 +47,35 @@ const CustomTooltip: React.FC<TooltipProps> = ({
             });
             e.stopPropagation();
             onDeleteClick();
+           await router.push(`/profile/${userId}`)
           }}
         >
           Delete
         </button>
       </div>
+      <div>
+        <button
+          className="mb-[8px]"
+          onClick={async (e) => {
+            await hidePost.mutateAsync({
+              postId: postId,
+            });
+            e.stopPropagation();
+            onDeleteClick();
+            await router.push(`/profile/${userId}`)
+          }}
+        >
+         Hide Post
+        </button>
+      </div>
     </div>
   );
 };
-
-const ToolTip = ({ postId }: { postId: string }) => {
+type ToolTipProps ={
+  postId:string,
+  userId:string
+}
+const ToolTip = ({ postId, userId }: ToolTipProps) => {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
 
   const handleEditClick = () => {
@@ -74,6 +98,7 @@ const ToolTip = ({ postId }: { postId: string }) => {
           onEditClick={handleEditClick}
           onDeleteClick={handleDeleteClick}
           postId={postId}
+          userId={userId}
         />
       }
       interactive

@@ -1,5 +1,5 @@
 import { api } from "~/utils/api";
-import React from "react";
+import React, { useState } from "react";
 import ToolTip from "./components/ToolTip";
 interface FileObject {
   filePath: string;
@@ -7,15 +7,40 @@ interface FileObject {
 }
 
 const Test = () => {
- const {data:a}= api.profile.getProfilebyUserId.useQuery({
-  userId:'clrn2bi800002em2d4ch8l01a'
- })
-
-
+  
+ const submit = api.profile.createBio.useMutation()
+ const [content,setContent]= useState('')
+ const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  setContent(e.target.value);
+};
+const handleSubmit =()=>{
+  try{
+    submit.mutate({
+      userId:"clrnpelmp00002i64tnml5r46",
+      bio: content
+    })
+    setContent('')
+  }catch (error) {
+    console.error('Error submitting post:', error);
+  } finally {
+    
+  }
+  
+}
   return (
     <div>
-
-      <ToolTip postId="clrlvvzmt000g6p9vciy64syi" />
+      <textarea
+        id="content"
+        className="w-full h-[90px] p-2 border border-gray-300 rounded mt-1 focus:outline-none focus:ring focus:border-blue-300 transition-all duration-300"
+        value={content}
+        onChange={handleContentChange}
+      />
+      <button
+        className={`bg-green-500 text-white py-2 px-4 mt-4 rounded `}
+        onClick={handleSubmit}
+      >
+        Submit
+      </button>
     </div>
   );
 };

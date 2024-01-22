@@ -6,6 +6,7 @@ import { RouterOutputs } from "~/utils/api";
 type inputType = RouterOutputs["post"]["getPosts"];
 //
 const PostIntroduction = ({ post }: { post: inputType }) => {
+  
   return (
     <div className="grid grid-cols-1 space-x-1  p-2 sm:grid-cols-2 md:gap-6 md:p-6 lg:grid-cols-3 ">
       {post?.map((a) => {

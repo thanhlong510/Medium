@@ -1,10 +1,11 @@
-
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 import React, {  useState } from 'react'
 import { api } from '~/utils/api'
 
 const WriteStory = () => {
   const {status}= useSession()
+  const router =useRouter()
   const [title,setTitle] = useState('')
   const [description,setDescription]= useState('')
   const [content,setContent]= useState('')
@@ -33,11 +34,12 @@ const WriteStory = () => {
       // Clear form after successful submission
       setTitle('');
       setContent('');
-      setDescription('')
+      setDescription('')   
     } catch (error) {
       console.error('Error submitting post:', error);
     } finally {
       setIsSubmitting(false);
+      await router.push('/')
     }
   };
   if(status!=='authenticated') return;

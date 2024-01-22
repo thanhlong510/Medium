@@ -12,9 +12,12 @@ const ProfilePage = () => {
   const { data: postData } = api.post.getPostbyUserId.useQuery({
     userId: profileId,
   });
-  const { data: profileData } = api.profile.getProfilebyUserId.useQuery({
-    userId: profileId,
-  });
+  const {data:profileData}=api.profile.getProfilebyUserId.useQuery({
+    userId:profileId,
+  })
+  const {data:bioData}=api.profile.getBio.useQuery({
+    userId:profileId,
+  })
 
   return (
     <div className="flex items-start justify-between p-8">
@@ -50,7 +53,7 @@ const ProfilePage = () => {
         {/* Bio Section */}
         <div className="mt-4">
           <h2 className="text-xl font-bold">Bio</h2>
-          <p>{"No bio available."}</p>
+          <p>{bioData?.bio}</p>
         </div>
 
         {/* Posts Section */}
