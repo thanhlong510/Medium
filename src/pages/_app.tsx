@@ -12,7 +12,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <div className="w-screen mx-auto">
-        <Header/>
+        <Header />
         <Component {...pageProps} />
       </div>
     </SessionProvider>

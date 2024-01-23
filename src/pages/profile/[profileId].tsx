@@ -4,8 +4,8 @@ import PostIntroduction from "../components/PostIntroduction";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
+
 const ProfilePage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const { data: session } = useSession();
   const router = useRouter();
   const profileId = router.query.profileId as string;
@@ -20,7 +20,7 @@ const ProfilePage = () => {
   })
 
   return (
-    <div className="flex items-start justify-between p-8">
+    <div className="flex items-start max-w-7xl mx-au justify-between p-8">
       <div className="flex-shrink-0">
         <img
           src={`${profileData?.image}`}
@@ -36,15 +36,7 @@ const ProfilePage = () => {
           </div>
           {/* Search Bar */}
           {session?.user.id == profileId ? (
-            <div>
-              <input
-                type="text"
-                placeholder="Search posts..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="rounded border border-gray-300 p-2"
-              />
-            </div>
+            ""
           ) : (
             ""
           )}

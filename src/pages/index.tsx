@@ -2,11 +2,10 @@ import Head from "next/head";
 import PostIntroduction from "./components/PostIntroduction";
 import { api } from "~/utils/api";
 import React, { useState, useEffect } from "react";
+import PostCard from "./components/PostCard";
 
 export default function Home() {
   const { data } = api.post.getPosts.useQuery();
-  if (!data) return;
-
   if (!data) return;
   return (
     <>
@@ -18,10 +17,11 @@ export default function Home() {
         </Head>
         <>
           <div className="w-full bg-yellow-400">
-            <div className="flex max-w-7xl items-center   lg:py-0">
-              <div className="space-y-5 px-10 py-10">
+            <div className="max-w-7xl m-auto"> 
+            <div className="flex  items-center lg:py-0">
+              <div className="space-y-5 mx-4 py-10">
                 <h1 className="max-w-xl font-serif text-6xl">
-                  <span className="underline decoration-black decoration-4">
+                  <span className="underline  decoration-black decoration-4">
                     Medium
                   </span>{" "}
                   is a place to write, read and connect
@@ -32,9 +32,17 @@ export default function Home() {
                 </h2>
               </div>
             </div>
+            </div>
+            
           </div>
-
-          <PostIntroduction post={data} />
+          <div className="flex max-w-7xl mx-auto justify-center">
+            <div className="max-w-7xl flex-1">
+              <div className="flex flex-col gap-3 p-2 sm:grid-cols-2 md:gap-6 md:p-6 lg:grid-cols-3">
+                <PostCard post={data} />
+              </div>
+            </div>
+          
+          </div>
         </>
       </div>
     </>

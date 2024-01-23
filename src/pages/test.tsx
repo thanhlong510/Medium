@@ -1,10 +1,14 @@
 import { api } from "~/utils/api";
 import React, { useState } from "react";
 import ToolTip from "./components/ToolTip";
-interface FileObject {
-  filePath: string;
-  fileName: string;
+import PostCard from "./components/PostCard";
+import SearchBar from "./components/SearchBar";
+
+interface Post {
+  id: string;
+  title: string;
 }
+
 
 const Test = () => {
   
@@ -27,8 +31,16 @@ const handleSubmit =()=>{
   }
   
 }
+const { data } = api.post.getPosts.useQuery();
+const postData: Post[] = [
+  { id: "clrlwts0j000k6p9vgj66vpnl", title: 'First Post' },
+  { id: "clrlwu3zo000o6p9vsg68n4qy", title: 'Second Post' },
+  // Add more data as needed
+];
+  if (!data) return;
   return (
     <div>
+      
       <textarea
         id="content"
         className="w-full h-[90px] p-2 border border-gray-300 rounded mt-1 focus:outline-none focus:ring focus:border-blue-300 transition-all duration-300"
@@ -41,6 +53,7 @@ const handleSubmit =()=>{
       >
         Submit
       </button>
+      <SearchBar data={postData}/>
     </div>
   );
 };
