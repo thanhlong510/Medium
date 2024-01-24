@@ -1,13 +1,46 @@
-// import { z } from "zod";
-// import {
-//   createTRPCRouter,
-//   protectedProcedure,
-//   publicProcedure,
-// } from "~/server/api/trpc";
-// import { Storage } from "@google-cloud/storage";
-// import path from "path";
-// import fs from "fs";
-// import { ALL } from "dns";
+import { z } from "zod";
+import {
+  createTRPCRouter,
+  publicProcedure,
+} from "~/server/api/trpc";
+import { Storage } from "@google-cloud/storage";
+
+const storage = new Storage({
+  credentials: {
+    client_email: "cloudstorage@sortable-ai.iam.gserviceaccount.com",
+    private_key: process.env.SECRET_FOR_LONG,
+  },
+  projectId: "sortable-ai",
+});
+export function useFileUpload() {
+    return async (filename: string, file: File) => {
+      const result = await fetch(`/api/files/upload-url?file=${filename}`);
+      const { url, fields } = await result.json();
+      const formData = new FormData();
+      Object.entries({ ...fields, file }).forEach(([key, value]) => {
+        formData.append(key, value as string | Blob);
+      });
+      const upload = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+      return upload.ok;
+    };
+  }
+const bucketName = "medium-blog-project"; // Replace with your GCP bucket name
+export const fileRouter = createTRPCRouter({
+    hello: publicProcedure
+      .input(z.object({ text: z.string() }))
+      .query(({ input }) => {
+        return {
+          greeting: `Hello ${input.text}`,
+        };
+      }),
+  });
+
+
+
+
 
 // generateFileLocation({ fileName, isPublic }: { fileName?: string; isPublic: boolean }) {
 //     const randomString = crypto.randomBytes(20).toString('hex');
@@ -66,11 +99,11 @@
 //       expires: Date.now() + 15 * 60 * 1000, // 15 minutes
 //     });
 //     return { signedUrl: url, filePath, bucketName, fullFilePath, downloadKey };
-//   }
+//   })
 
-// // Then it is used in trpc like this
-// export const filesRouter = router({
-//   generateSignedUploadUrl: adminProcedure
+// Then it is used in trpc like this
+// export const fileRouter = createTRPCRouter({
+//     generateSignedUploadUrl: adminProcedure
 //     .input(
 //       z.object({
 //         isPublic: z.boolean(),
@@ -89,9 +122,9 @@
 //           input.companyId,
 //           input.userId,
 //         );
-//         return { signedUrl, downloadKey };
+//         return { signedUrl, downloadKey }; 
 //       } catch (e: any) {
-//         throw new TRPCError(e);
+       
 //       }
 //     }),
 // });
