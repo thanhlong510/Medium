@@ -15,7 +15,7 @@ const storage = new Storage({
 const bucketName = "medium-blog-project"; // Replace with your GCP bucket name
 
 export const profileRouter = createTRPCRouter({
-  getProfilebyUserId: publicProcedure
+  getinforProfilebyUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       return ctx.db.user.findUnique({
@@ -37,7 +37,7 @@ export const profileRouter = createTRPCRouter({
           userId: input.userId,
         },
       });
-      if (bioData !== null) {
+      if (!bioData ) {
         return ctx.db.bio.create({
           data: {
             userId: input.userId,

@@ -1,62 +1,69 @@
-import Link from 'next/link';
-import React, { useState } from 'react';
+import Link from "next/link";
+import React, { useState } from "react";
+import { CiSearch } from "react-icons/ci";
+import { RouterOutputs } from "~/utils/api";
+type inputType = RouterOutputs["post"]["getPosts"];
 
-interface Post {
-  id: string;
-  title: string;
-}
+const SearchBar = ({ data }: { data: inputType }) => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<inputType>([]);
 
-interface SearchBarProps {
-  data: Post[];
-}
-
-
-const SearchBar: React.FC<SearchBarProps> = ({ data }) => {
-    const [searchTerm, setSearchTerm] = useState<string>('');
-    const [searchResults, setSearchResults] = useState<Post[]>([]);
-  
-    const handleSearch = (query: string) => {
-      const normalizedQuery = query.toLowerCase().trim();
-      const filteredResults = data.filter((item) =>
-        item.title.toLowerCase().includes(normalizedQuery)
-      );
-      setSearchResults(filteredResults);
-    };
-  
-    const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
-      const query = (e.target as HTMLInputElement).value;
-      setSearchTerm(query);
-      handleSearch(query);
-    };
-  
-    return (
-      <div>
-        <input
-          type="text"
-          placeholder="Search posts..."
-          value={searchTerm}
-          onInput={handleInput}
-          className="rounded border border-gray-300 p-2"
-        />
-        {searchTerm && (
-          <div className="mt-2">
-            {searchResults.length > 0 ? (
-              <ul>
-                {searchResults.map((result) => (
-                    <Link key={result.id} href={`/post/${result.id}`}>
-                    <li >{result.title}</li>
-                    </Link>
-                  
-                ))}
-              </ul>
-            ) : (
-              <p>No result available.</p>
-            )}
-          </div>
-        )}
-      </div>
+  const handleSearch = (query: string) => {
+    const normalizedQuery = query.toLowerCase().trim();
+    const filteredResults = data.filter((item) =>
+      item.title.toLowerCase().includes(normalizedQuery),
     );
+    setSearchResults(filteredResults);
   };
-  
 
-export default SearchBar
+  const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
+    const query = (e.target as HTMLInputElement).value;
+    setSearchTerm(query);
+    handleSearch(query);
+  };
+
+  return (
+    <div className="relative">
+      <input
+        type="text"
+        placeholder="Search posts..."
+        value={searchTerm}
+        onInput={handleInput}
+        className="rounded-3xl border border-gray-300 p-2"
+      />
+      {searchTerm && (
+        <div className="absolute top-9 mt-2 w-full">
+          {searchResults.length > 0 ? (
+            <ul className="rounded-2xl border border-gray-300 bg-white  ">
+              {searchResults.map((result) => (
+                <div className="my-2 w-full rounded-2xl p-2 hover:bg-gray-100">
+                  <div className="flex items-center gap-2">
+                    <div className="h-[16px] w-[16px]">
+                    <CiSearch  />
+                    </div>
+                    
+                    <Link
+                      key={result.postId}
+                      href={`/post/${result.postId}`}
+                      className=""
+                    >
+                      <li className="cursor-pointer  p-1 hover:bg-gray-100">
+                        {result.title}
+                      </li>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </ul>
+          ) : (
+            <p className="rounded border border-gray-300 bg-white p-2">
+              No result available.
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SearchBar;

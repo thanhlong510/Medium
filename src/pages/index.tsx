@@ -1,8 +1,8 @@
 import Head from "next/head";
-import PostIntroduction from "./components/PostIntroduction";
 import { api } from "~/utils/api";
 import React, { useState, useEffect } from "react";
 import PostCard from "./components/PostCard";
+
 
 export default function Home() {
   const { data } = api.post.getPosts.useQuery();
@@ -38,10 +38,13 @@ export default function Home() {
           <div className="flex max-w-7xl mx-auto justify-center">
             <div className="max-w-7xl flex-1">
               <div className="flex flex-col gap-3 p-2 sm:grid-cols-2 md:gap-6 md:p-6 lg:grid-cols-3">
+                <div className="max-w-[40rem]">
                 <PostCard post={data} />
+                </div>
+                
               </div>
             </div>
-          
+           
           </div>
         </>
       </div>
