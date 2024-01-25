@@ -135,7 +135,8 @@ export const postRouter = createTRPCRouter({
       where: {
         hide: false,
       },
-      take: ALL,
+      take: 100,
+      orderBy:[{createdAt:'desc'}],
       select: {
         user: {
           select: { name: true, image: true, email: true },

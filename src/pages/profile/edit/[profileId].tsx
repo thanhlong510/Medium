@@ -24,7 +24,7 @@ const EditPage = () => {
      }catch (error) {
        console.error('Error submitting post:', error);
      } finally {
-        router.push(`/profile/${profileId}`)
+         router.push(`/profile/${profileId}`)
      }
      
    }

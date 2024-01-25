@@ -28,9 +28,24 @@ model Post {
     description String
     content     String
     hide Boolean @default(false)
+    categories Categories[] 
+    replies Replies[]
     @@index([userId])
 }
-
+ 
+model Replies {
+    id     String  @id @default(cuid())
+    repliestoId String?
+    post Post? @relation(fields: [repliestoId], references: [postId])
+    replies String?
+    userId String?
+    user User? @relation(fields: [userId], references: [id])
+}
+model Categories {
+    id     String  @id @default(cuid())
+    post Post[] 
+    category String[]
+}
 
 // Next Auth
 model Account {
@@ -68,7 +83,7 @@ model User {
     sessions      Session[]
     posts         Post[]
     bio Bio?
-
+    replies Replies[]
 }
 
 model VerificationToken {

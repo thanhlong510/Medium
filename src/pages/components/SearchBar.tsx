@@ -36,7 +36,7 @@ const SearchBar = ({ data }: { data: inputType }) => {
           {searchResults.length > 0 ? (
             <ul className="rounded-2xl border border-gray-300 bg-white  ">
               {searchResults.map((result) => (
-                <div className="my-2 w-full rounded-2xl p-2 hover:bg-gray-100">
+                <div key={result.postId} className="my-2 w-full rounded-2xl p-2 hover:bg-gray-100">
                   <div className="flex items-center gap-2">
                     <div className="h-[16px] w-[16px]">
                     <CiSearch  />

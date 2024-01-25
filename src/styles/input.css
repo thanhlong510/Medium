@@ -1,0 +1,15 @@
+.input-value {
+  background-color: #f1f1f1; /* Màu nền xám */
+  padding-right: 30px; /* Để tạo không gian cho nút X */
+  position: relative;
+}
+
+/* CSS cho nút X */
+.remove-button {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ff0000; /* Màu đỏ cho nút X */
+}

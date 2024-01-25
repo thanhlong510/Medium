@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { RouterOutputs } from "~/utils/api";
-
+import dayjs from "dayjs";
 type inputType = RouterOutputs["post"]["getPosts"];
 const PostCard = ({ post }: { post: inputType }) => {
   return (
@@ -24,7 +24,7 @@ const PostCard = ({ post }: { post: inputType }) => {
                 <div className="text-[#787878]">{a.description}</div>
                 <div className="flex items-center justify-between text-[#787878]">
                   <span className="text-[.8rem] my-2">
-                    June 15{" "}
+                    {`${dayjs(a.createdAt)}`}
                     <span className="rounded-full bg-[#F2F3F2] p-2">
                       Productivity
                     </span>
