@@ -105,7 +105,7 @@ const MultiSelectDropdown: React.FC = () => {
           </div>
         )}
       </div>
-      <button className='w-[100px] h-[50px] bg-red-700 mt-4 rounded-full' onClick={()=>{createPost.mutateAsync({description:'xin chao',content:'xin chao', title:'Xin chao'})}}>
+      <button className='w-[100px] h-[50px] bg-red-700 mt-4 rounded-full' >
         Submit
       </button>
     </div>

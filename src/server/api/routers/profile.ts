@@ -31,8 +31,8 @@ export const profileRouter = createTRPCRouter({
     }),
   createBio: publicProcedure
     .input(z.object({ userId: z.string(), bio: z.string() }))
-    .mutation(({ ctx, input }) => {
-      const bioData = ctx.db.bio.findUnique({
+    .mutation(async ({ ctx, input }) => {
+      const bioData = await  ctx.db.bio.findUnique({
         where: {
           userId: input.userId,
         },

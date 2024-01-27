@@ -14,7 +14,7 @@ const EditPage = () => {
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
      setContent(e.target.value);
    };
-   const handleSubmit =()=>{
+   const handleSubmit = async ()=>{
      try{
        submit.mutate({
          userId:profileId,
@@ -24,7 +24,7 @@ const EditPage = () => {
      }catch (error) {
        console.error('Error submitting post:', error);
      } finally {
-         router.push(`/profile/${profileId}`)
+        await router.push(`/profile/${profileId}`)
      }
      
    }

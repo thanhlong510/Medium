@@ -24,7 +24,7 @@ const Post = () => {
         </h2>
         <div className="flex items-center justify-between space-x-12 ">
           <Link href={`/profile/${data.userId}`}>
-            <div className="flex items-center  space-x-4">
+            <div className="flex items-center  space-x-4 ">
               <img
                 alt=""
                 src={`${data?.user.image}`}
@@ -42,7 +42,7 @@ const Post = () => {
         <img
           src="/screen.jpg"
           alt=""
-          className="my-5 h-80 w-full object-cover"
+          className="my-5 h-80 w-full object-cover rounded-lg"
         />
         <div>
           <p>{data?.content}</p>

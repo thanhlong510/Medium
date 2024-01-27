@@ -6,7 +6,7 @@ type inputType = RouterOutputs["post"]["getPosts"];
 const PostCard = ({ post }: { post: inputType }) => {
   return (
     <div>
-      {post.map((a) => {
+      {post?.map((a) => {
         return (
           <Link key={a?.postId} href={`/post/${a?.postId}`}>
             <div className="flex h-[10rem]  cursor-pointer items-center justify-between gap-[1rem] border-b border-solid border-gray-200">
@@ -24,7 +24,7 @@ const PostCard = ({ post }: { post: inputType }) => {
                 <div className="text-[#787878]">{a.description}</div>
                 <div className="flex items-center justify-between text-[#787878]">
                   <span className="text-[.8rem] my-2">
-                    {`${dayjs(a.createdAt)}`}
+                    {`${dayjs(a.createdAt).format('YYYY-MM-DD HH:mm:ss')}`}
                     <span className="rounded-full bg-[#F2F3F2] p-2">
                       Productivity
                     </span>
