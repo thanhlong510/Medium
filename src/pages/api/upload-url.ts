@@ -5,11 +5,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<SignedPostPolicyV4Output | string>
 ) {
-  const { query, method } = req;
-  if (method !== "POST") {
-    res.status(405).json("Method not allowed");
-    return;
-  }
+  const { query} = req;
+
   const storage = new Storage({
     projectId: "sortable-ai",
     credentials: {
@@ -24,5 +21,6 @@ export default async function handler(
     fields: { "x-goog-meta-source": "nextjs-project" },
   };
   const [response] = await file.generateSignedPostPolicyV4(options);
+  console.log(response)
   res.status(200).json(response);
 }

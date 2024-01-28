@@ -68,7 +68,7 @@ export const postRouter = createTRPCRouter({
       );
       return { imageUrl };
     }),
-    getPostsbyUserId: publicProcedure
+  getPostsbyUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.db.post.findMany({
@@ -106,6 +106,11 @@ export const postRouter = createTRPCRouter({
           content: true,
           postId: true,
           userId: true,
+          categories:{
+            select:{
+              category:true
+            }
+          }
         },
       });
     }),
@@ -127,6 +132,11 @@ export const postRouter = createTRPCRouter({
           content: true,
           postId: true,
           userId: true,
+        categories:{
+          select:{
+            category:true
+          }
+        }
         },
       });
     }),
@@ -136,7 +146,7 @@ export const postRouter = createTRPCRouter({
         hide: false,
       },
       take: 100,
-      orderBy:[{createdAt:'desc'}],
+      orderBy: [{ createdAt: "desc" }],
       select: {
         user: {
           select: { name: true, image: true, email: true },
@@ -147,6 +157,11 @@ export const postRouter = createTRPCRouter({
         content: true,
         postId: true,
         userId: true,
+        categories:{
+          select:{
+            category:true
+          }
+        }
       },
     });
   }),
@@ -206,6 +221,7 @@ export const postRouter = createTRPCRouter({
         description: z.string(),
         title: z.string(),
         content: z.string(),
+        categories:z.array(z.string())
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -215,6 +231,7 @@ export const postRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           content: input.content,
+          categories:{create:{category:input.categories}}
         },
       });
       return item;
@@ -256,4 +273,32 @@ export const postRouter = createTRPCRouter({
       });
       return section;
     }),
+  getPostbyCategories: publicProcedure
+  .input(z.object({categories:z.string()}))
+  .query(async({ctx,input})=>{
+      return ctx.db.post.findMany({
+        take:ALL,
+        where:{
+          categories: {some:
+          {
+            category:{
+              has:input.categories
+            }
+          }},
+          hide:false,
+        },
+        select: {
+          user: {
+            select: { name: true, image: true, id: true },
+          },
+          createdAt: true,
+          description: true,
+          title: true,
+          content: true,
+          postId: true,
+          userId: true,
+
+        },
+      })
+  })
 });

@@ -1,19 +1,19 @@
-import { useSession } from "next-auth/react";
-import { api } from "~/utils/api";
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { api } from '~/utils/api';
+import { useRouter } from 'next/router';
+import { GoPencil } from 'react-icons/go';
+import SearchBar from '../components/SearchBar';
+import PostCard from '../components/PostCard';
+import { RouterOutputs } from '~/utils/api';
+import Link from 'next/link';
 
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { GoPencil } from "react-icons/go";
-import SearchBar from "../components/SearchBar";
-import PostCard from "../components/PostCard";
+type inputType = RouterOutputs['post']['getPosts'];
 
-import { RouterOutputs } from "~/utils/api";
-import Link from "next/link";
-
-type inputType = RouterOutputs["post"]["getPosts"];
 const ProfilePage = () => {
-  const [bold, setBold] = useState("1");
+  const [bold, setBold] = useState('1');
   const router = useRouter();
+  const { data: session } = useSession();
   const profileId = router.query.profileId as string;
   const { data: postData } = api.post.getPostsbyUserId.useQuery({
     userId: profileId,
@@ -24,20 +24,27 @@ const ProfilePage = () => {
   const { data: postUnhidedata } = api.post.getUnhidePostbyUserId.useQuery({
     userId: profileId,
   });
-  const [showData,setShowdata]=useState<inputType|undefined>(postUnhidedata)
+  const [showData, setShowdata] = useState<inputType | undefined>(postUnhidedata);
   const { data: profileData } = api.profile.getinforProfilebyUserId.useQuery({
     userId: profileId,
   });
   const { data: bioData } = api.profile.getBio.useQuery({
     userId: profileId,
   });
+
+  useEffect(() => {
+    // Kiểm tra xem dữ liệu từ postUnhidedata đã sẵn có chưa
+    if (postUnhidedata) {
+      setShowdata(postUnhidedata);
+    }
+  }, [postUnhidedata]);
+
   const handleBold = (data: string) => {
     setBold(data);
-    if(data=='1'){
-      setShowdata(postUnhidedata)
-    }
-    else if(data=='2'){
-      setShowdata(postHidedata)
+    if (data == '1') {
+      setShowdata(postUnhidedata);
+    } else if (data == '2') {
+      setShowdata(postHidedata);
     }
   };
 
@@ -58,24 +65,25 @@ const ProfilePage = () => {
               <div>
                 <div className="flex items-center justify-end gap-2">
                   <div className="flex flex-row items-center gap-2 ">
-                    <Link href={`/profile/edit/${profileId}`}>
-                    <button className="relative flex h-[40px] w-[40px] items-center overflow-hidden rounded-full border-2 first-line:border-blue-500">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <svg
-                          className="h-[40px] w-[40px] pl-2 pt-2 text-blue-500"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          viewBox="0 0 24 24"
-                        >
-                          <GoPencil />
-                        </svg>
-                      </div>
-                    </button>
-                    </Link>
-                    
+                    {session?.user.id==profileId? <Link href={`/profile/edit/${profileId}`}>
+                      <button className="relative flex h-[40px] w-[40px] items-center overflow-hidden rounded-full border-2 first-line:border-blue-500">
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <svg
+                            className="h-[40px] w-[40px] pl-2 pt-2 text-blue-500"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            viewBox="0 0 24 24"
+                          >
+                            <GoPencil />
+                          </svg>
+                        </div>
+                      </button>
+                    </Link>:''}
+                   
+
                     {postData == undefined ? "" : <SearchBar data={postData} />}
                   </div>
                 </div>
@@ -87,7 +95,7 @@ const ProfilePage = () => {
           <h1 className="space-[.41px] text-3xl font-bold">
             {profileData?.name}
           </h1>
-          <p className="cursor-pointer space-x-[.2px] font-bold text-base text-orange-600 hover:underline">
+          <p className="cursor-pointer space-x-[.2px] text-base font-bold text-orange-600 hover:underline">
             Email: {profileData?.email}
           </p>
           <div className="text-sm font-normal text-gray-400">
@@ -134,7 +142,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div> 
   );
 };
 

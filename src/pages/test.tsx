@@ -1,55 +1,14 @@
 import React, { useState } from "react";
 
-export function useFileUpload() {
-  return async (filename: string, file: File) => {
-    const result = await fetch(`/api/files/upload-url?file=${filename}`);
-    const { url, fields } = await result.json();
-    const formData = new FormData();
-    Object.entries({ ...fields, file }).forEach(([key, value]) => {
-      formData.append(key, value as string | Blob);
-    });
-    const upload = await fetch(url, {
-      method: "POST",
-      body: formData,
-    });
-    return upload.ok;
-  };
-}
+
+
+
 
 const Test = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const uploadFile = useFileUpload();
-
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] ?? null;
-    setSelectedFile(file);
-  };
-
-  const handleUpload = async () => {
-    try {
-      if (!selectedFile) {
-        // Handle case when no file is selected
-        return;
-      }
-      const uploadOk = await uploadFile(selectedFile.name, selectedFile);
-      if (uploadOk) {
-        // show success
-        console.log('Upload successful');
-      } else {
-        // show error
-        console.error('Upload failed');
-      }
-    } catch (error) {
-      // Handle other errors that might occur during file upload
-      console.error('Error during file upload:', error);
-    }
-  };
+  
 
   return (
-    <div>
-      <input type="file" onChange={handleFileSelect} />
-      <button onClick={handleUpload}>Upload</button>
-    </div>
+    'xin choao'
   );
 };
 export default Test;

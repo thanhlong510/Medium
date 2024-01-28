@@ -5,6 +5,8 @@ import { api } from "~/utils/api";
 import ToolTip from "../components/ToolTip";
 import Link from "next/link";
 import dayjs from 'dayjs'
+import CommentForm from "../components/comment/CommentForm";
+import CommentList from "../components/comment/CommentList";
 const Post = () => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -13,16 +15,21 @@ const Post = () => {
     postId: postId,
   });
   const data = postQuery.data;
-  if (!data) return;
+  if (!data ) return;
   
   return (
-    <div>
-      <article className="mx-auto max-w-2xl p-5">
-        <h1 className="mb-3 mt-5 text-5xl font-bold tracking-tight ">{data?.title}</h1>
-        <h2 className="mb-2 text-2xl  text-[#6B6B6B] font-normal">
+    <div className="bg-slate-900 -mt-10 ">
+      <article className="mx-auto mb-40 sm:w-full md:max-w-3xl lg:max-w-5xl p-5 text-white ">
+      <img
+          src="/postImage.webp"
+          alt=""
+          className="my-5  w-full object-cover rounded-lg"
+        />
+        <h1 className="mb-3 mt-5 text-5xl font-bold text-center tracking-tight ">{data?.title}</h1>
+        <h2 className="mb-2 text-2x1 text-center lg:text-3xl  text-slate-400 font-normal">
           {data?.description}
         </h2>
-        <div className="flex items-center justify-between space-x-12 ">
+        <div className="flex mb-10 items-center justify-between space-x-12 ">
           <Link href={`/profile/${data.userId}`}>
             <div className="flex items-center  space-x-4 ">
               <img
@@ -39,15 +46,12 @@ const Post = () => {
 
           {session?.user.id == data?.user.id ? <ToolTip postId={postId} userId={data.userId} /> : ""}
         </div>
-        <img
-          src="/screen.jpg"
-          alt=""
-          className="my-5 h-80 w-full object-cover rounded-lg"
-        />
-        <div>
-          <p>{data?.content}</p>
+        <div className="">
+          <p className="text-xl">{data?.content}</p>
         </div>
       </article>
+     <CommentForm postId={postId} userId={session?.user?.id ?? '' } username={session?.user?.name ?? '' }/> 
+     <CommentList postId={postId}/>
     </div>
   );
 };

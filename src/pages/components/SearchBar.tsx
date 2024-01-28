@@ -2,7 +2,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { RouterOutputs } from "~/utils/api";
-type inputType = RouterOutputs["post"]["getPosts"];
+type inputType = RouterOutputs["post"]["getPostsbyUserId"];
 
 const SearchBar = ({ data }: { data: inputType }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");

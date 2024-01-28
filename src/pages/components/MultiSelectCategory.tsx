@@ -1,41 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { api } from '~/utils/api';
-
+import { BiCategory } from "react-icons/bi";
 const interestsOptions = [
   'Programming',
-  'Data Science',
   'Technology',
-  'Self Improvement',
   'Writing',
   'Relationships',
-  'Machine Learning',
   'Productivity',
   'Politics',
   'Sports',
 ];
+interface MultiSelectCategoryProps {
+    handleInterestToggle: (a:string)=>void,
+    selectedInterests: string[]
 
-const MultiSelectDropdown: React.FC = () => {
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+}
+
+const MultiSelectCategory: React.FC<MultiSelectCategoryProps> = ({handleInterestToggle, selectedInterests}) => {
+
   const [availableInterests, setAvailableInterests] = useState<string[]>(interestsOptions);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const createPost = api.post.create.useMutation({
-
-  })
+  
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleInterestToggle = (interest: string) => {
-    if (selectedInterests.includes(interest)) {
-      // If the interest is already selected, remove it
-      setSelectedInterests(selectedInterests.filter(item => item !== interest));
-    } else {
-      // If the interest is not selected, add it
-      setSelectedInterests([...selectedInterests, interest]);
-    }
-  };
+ 
 
   const handleOutsideClick = (event: MouseEvent) => {
     // Close the dropdown if clicked outside
@@ -58,40 +49,42 @@ const MultiSelectDropdown: React.FC = () => {
   }, [selectedInterests]);
 
   return (
-    <div ref={dropdownRef} className="relative">
-      <div className="flex flex-wrap gap-2 absolute -top-10">
-        {selectedInterests.map(interest => (
+    <div ref={dropdownRef} className="relative ">
+      <div className="flex  gap-2 sm:max-w-xl md:max-w-2xl lg:max-w-3xl absolute top-4">
+        {selectedInterests?.map(interest => (
           <span
             key={interest}
-            className="bg-gray-300 px-2 py-1 rounded-xl cursor-pointer flex items-center"
+            className="bg-gray-300 px-2 py-1  rounded-xl cursor-pointer flex items-center"
             onClick={() => handleInterestToggle(interest)}
           >
-            <span className="mr-1">{interest}</span>
-            <span className="text-red-500 cursor-pointer">&times;</span>
+            <span className="mr-1  font-normal overflow-hidden overflow-ellipsis">{interest}</span>
+            <span className="text-slate-900 cursor-pointer">&times;</span>
           </span>
         ))}
       </div>
       <div className="relative mt-[60px]">
-        <input
-          type="text"
-          placeholder="Select your interests..."
+      <div className='flex gap-3 items-center'>
+      <BiCategory
+          className="h-[20px] w-[20px]"
           onClick={handleDropdownToggle}
-          readOnly
-          className={`cursor-pointer border border-gray-300 rounded px-2 py-1 w-[250px] h-[50px] `}
-          value={selectedInterests.join(', ')}
-        />
+        /> 
+        <p onClick={handleDropdownToggle} className='text-center font-semibold text-[#334155] text-sm cursor-pointer'>
+            Add your category
+        </p>
+      </div>
+        
         {isDropdownOpen && (
-          <div className="absolute top-full left-0 border border-gray-300 rounded-xl bg-white z-10 w-250">
+          <div className="absolute top-full left-4 border border-gray-300 rounded-xl bg-white z-10 w-250">
            
-            {availableInterests.map(interest => (
+            {availableInterests?.map(interest => (
               <div
                 key={interest}
                 className={`p-2 cursor-pointer font-semibold ${
                   selectedInterests.includes(interest) ? 'bg-gray-300 selected' : ''
                 }`}
                 onClick={() => handleInterestToggle(interest)}
-                onMouseEnter={(e) => e.currentTarget.classList.add('hover:bg-green-400', 'text-white')}
-                onMouseLeave={(e) => e.currentTarget.classList.remove('hover:bg-green-400', 'text-white')}
+                onMouseEnter={(e) => e.currentTarget.classList.add('hover:bg-green-400','hover:rounded-xl', 'text-white')}
+                onMouseLeave={(e) => e.currentTarget.classList.remove('hover:bg-green-400','hover:rounded-xl', 'text-white')}
                 style={{
                   width: '100%', // Chiều rộng tối đa của option
                   overflow: 'hidden',
@@ -105,11 +98,9 @@ const MultiSelectDropdown: React.FC = () => {
           </div>
         )}
       </div>
-      <button className='w-[100px] h-[50px] bg-red-700 mt-4 rounded-full' >
-        Submit
-      </button>
+
     </div>
   );
 };
 
-export default MultiSelectDropdown;
+export default MultiSelectCategory;

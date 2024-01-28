@@ -2,9 +2,11 @@ import { useRouter } from "next/router";
 import React from "react";
 import { api } from "~/utils/api";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 const EditPage = () => {
   const router = useRouter();
   const slug = router.query.slug as string;
+  const {data:session}= useSession()
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
@@ -54,6 +56,7 @@ const EditPage = () => {
       setIsSubmitting(false);
     }
   };
+  if(session?.user.id !== slug) return;
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="w-full rounded bg-white p-8 shadow-md sm:max-w-3xl">
@@ -79,7 +82,7 @@ const EditPage = () => {
         </label>
         <textarea
           id="content"
-          className="mt-1 h-[50px] w-full rounded border border-gray-300 p-2 transition-all duration-300 focus:border-blue-300 focus:outline-none focus:ring"
+          className="mt-1 h-[50px] w-full resize-none rounded border border-gray-300 p-2 transition-all duration-300 focus:border-blue-300 focus:outline-none focus:ring"
           value={description}
           onChange={handleDescriptionChange}
         />
@@ -92,7 +95,7 @@ const EditPage = () => {
         </label>
         <textarea
           id="content"
-          className="mt-1 h-[90px] w-full rounded border border-gray-300 p-2 transition-all duration-300 focus:border-blue-300 focus:outline-none focus:ring"
+          className="mt-1 h-[90px] resize-none w-full rounded border border-gray-300 p-2 transition-all duration-300 focus:border-blue-300 focus:outline-none focus:ring"
           value={content}
           onChange={handleContentChange}
         />

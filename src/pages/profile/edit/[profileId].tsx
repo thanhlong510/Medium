@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react'
 import { api } from '~/utils/api';
@@ -5,11 +6,12 @@ import { api } from '~/utils/api';
 const EditPage = () => {
     const router = useRouter()
     const profileId = router.query.profileId as string
+    const {data:session}= useSession()
+
     const submit = api.profile.createBio.useMutation()
     const {data:bio} = api.profile.getBio.useQuery({
         userId:profileId
     })
-    console.log()
     const [content,setContent]= useState(bio?.bio)
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
      setContent(e.target.value);
@@ -28,15 +30,15 @@ const EditPage = () => {
      }
      
    }
-   const { data } = api.post.getPosts.useQuery();
+   if(profileId!==session?.user.id) return;
    
-     if (!data) return;
+ 
      return (
        <div>
          
          <textarea
            id="content"
-           className="w-full h-[90px] p-2 border border-gray-300 rounded mt-1 focus:outline-none focus:ring focus:border-blue-300 transition-all duration-300"
+           className="w-full h-[90px] resize-none p-2 border border-gray-300 rounded mt-1 focus:outline-none focus:ring focus:border-blue-300 transition-all duration-300"
            value={content}
            onChange={handleContentChange}
          />

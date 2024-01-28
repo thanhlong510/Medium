@@ -10,40 +10,53 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model Bio {
+    id     String @id @default(cuid())
+    user   User   @relation(fields: [userId], references: [id])
+    userId String @unique
+    bio    String
 
-model Bio{
-    id     String  @id @default(cuid())
-    user   User @relation(fields: [userId], references: [id])
-    userId String  @unique
-    bio String
-}
-model Post {
-    postId      String   @id @default(cuid())
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    title       String
-    user        User     @relation(fields: [userId], references: [id])
-    userId      String
-    imageId     String   @default("")
-    description String
-    content     String
-    hide Boolean @default(false)
-    categories Categories[] 
-    replies Replies[]
     @@index([userId])
 }
- 
-model Replies {
-    id     String  @id @default(cuid())
-    repliestoId String?
-    post Post? @relation(fields: [repliestoId], references: [postId])
-    replies String?
-    userId String?
-    user User? @relation(fields: [userId], references: [id])
+
+model Post {
+    postId      String       @id @default(cuid())
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    title       String
+    user        User         @relation(fields: [userId], references: [id])
+    userId      String
+    imageId     String       @default("")
+    description String
+    content     String
+    hide        Boolean      @default(false)
+    categories  Categories[]
+    replies     Replies[]
+
+    @@index([userId])
 }
+
+model Replies {
+    id             String  @id @default(cuid())
+    repliesContent String?
+
+    post   Post?   @relation(fields: [postId], references: [postId])
+    postId String?
+
+    user   User?   @relation(fields: [userId], references: [id])
+    userId String?
+
+    children Replies[] @relation("comment_children")
+    parent   Replies?  @relation("comment_children", fields: [parentId], references: [id])
+    parentId String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
 model Categories {
-    id     String  @id @default(cuid())
-    post Post[] 
+    id       String   @id @default(cuid())
+    post     Post[]
     category String[]
 }
 
@@ -62,6 +75,7 @@ model Account {
     id_token          String? // @db.Text
     session_state     String?
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
     @@unique([provider, providerAccountId])
 }
 
@@ -82,8 +96,8 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
-    bio Bio?
-    replies Replies[]
+    bio           Bio?
+    replies       Replies[]
 }
 
 model VerificationToken {

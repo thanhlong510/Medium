@@ -25,7 +25,7 @@ const Header = () => {
 
         <div className='flex space-x-5 text-green-600 items-center'>
             <AuthShowcase/>
-            {(status=='authenticated'? <Link href="/writestory"> <h3 className='border px-4 py-1 rounded-full border-green-600'> Write</h3> </Link> : <h3 className='border px-4 py-1 rounded-full border-green-600'> Get Started</h3>)}
+            {(status=='authenticated'? <Link href="/writestory"> <h3 className='border text-xl px-2 py-[3px] rounded-full border-green-600'> Write</h3> </Link> : <h3 className='border px-4 py-1 rounded-full border-green-600'> Get Started</h3>)}
         </div>
         
     </header>
@@ -43,7 +43,7 @@ function AuthShowcase() {
     return (
       <div className="flex h-full flex-col items-center justify-center ">
         <button
-          className="rounded-full ml-10 px-2 bg-black  font-semibold text-white text-xl no-underline transition "
+          className="rounded-full ml-10 px-2 py-[4px] bg-black  font-semibold text-white text-xl no-underline transition "
           onClick={sessionData ? () => void signOut() : () => void signIn()}
         >
           {sessionData ? "Sign out" : "Sign in"}
