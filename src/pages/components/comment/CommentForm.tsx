@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { api } from "~/utils/api";
 
@@ -34,6 +33,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
       setComment("");
     }
   };
+
   return (
     <div className="mx-auto mt-5 flex rounded border-t border-solid  border-slate-400 p-4 sm:w-full md:max-w-3xl lg:max-w-5xl">
       <img

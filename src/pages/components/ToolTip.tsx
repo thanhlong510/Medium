@@ -10,33 +10,32 @@ interface TooltipProps {
   onEditClick: () => void;
   onDeleteClick: () => void;
   postId: string;
-  userId:string;
+  userId: string;
 }
 
 const CustomTooltip: React.FC<TooltipProps> = ({
   onEditClick,
   onDeleteClick,
   postId,
-  userId
+  userId,
 }) => {
-  const router = useRouter()
+  const router = useRouter();
   const deletePost = api.post.delete.useMutation();
-  const hidePost = api.post.hidePost.useMutation()
+  const hidePost = api.post.hidePost.useMutation();
   return (
-    <div className="flex bg- flex-col">
+    <div className="bg- flex flex-col">
       <div>
         <Link href={`/edit/${postId}`}>
-        <button
-          onClick={(e) => {
-            onEditClick();
-            e.stopPropagation();
-          }}
-          className="mb-[8px]"
-        >
-          Edit
-        </button>
+          <button
+            onClick={(e) => {
+              onEditClick();
+              e.stopPropagation();
+            }}
+            className="mb-[8px]"
+          >
+            Edit
+          </button>
         </Link>
-       
       </div>
       <div>
         <button
@@ -47,7 +46,7 @@ const CustomTooltip: React.FC<TooltipProps> = ({
             });
             e.stopPropagation();
             onDeleteClick();
-           await router.push(`/profile/${userId}`)
+            await router.push(`/profile/${userId}`);
           }}
         >
           Delete
@@ -62,19 +61,19 @@ const CustomTooltip: React.FC<TooltipProps> = ({
             });
             e.stopPropagation();
             onDeleteClick();
-            await router.push(`/profile/${userId}`)
+            await router.push(`/profile/${userId}`);
           }}
         >
-         Hide Post
+          Hide Post
         </button>
       </div>
     </div>
   );
 };
-type ToolTipProps ={
-  postId:string,
-  userId:string
-}
+type ToolTipProps = {
+  postId: string;
+  userId: string;
+};
 const ToolTip = ({ postId, userId }: ToolTipProps) => {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
 

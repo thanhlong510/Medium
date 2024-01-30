@@ -16,57 +16,35 @@ const storage = new Storage({
   },
   projectId: "sortable-ai",
 });
-// const file = storage.bucket("medium-blog-project");
 
-export const uploadImageToGCS = async (
-  filePath: string,
-  fileName: string,
-): Promise<string> => {
-  try {
-    const bucket = storage.bucket("medium-blog-project");
-    const fullFilePath = path.join(filePath, fileName);
+const isFile = async (a: string) => {
+  const file = storage.bucket("medium-blog-project").file(`${a}`);
 
-    // Read date from file
+  const b = await file.exists();
+  return b;
+};
 
-    const fileBuffer = fs.readFileSync(fullFilePath);
-    if (fileBuffer) return "";
-    // Upload file to GCS
-    const destinationFileName = `images/${fileName}`;
-    await bucket.upload(fileBuffer, {
-      destination: destinationFileName,
-      gzip: true,
-      metadata: {
-        cacheControl: "public, max-age=31536000",
-      },
-    });
+const getFile = async (a: string) => {
+  const file = storage.bucket("medium-blog-project").file(`${a}`);
 
-    // Get image after uploading
-    const imageUrl = `https://storage.googleapis.com/medium-blog-project/${destinationFileName}`;
-    console.log("Image uploaded successfully. URL:", imageUrl);
+  const [signedUrl] = await file.getSignedUrl({
+    action: "read",
+    expires: Date.now() + 300 * 1000,
+  });
 
-    return imageUrl;
-  } catch (error) {
-    console.error("Error uploading image to GCS:", error);
-    throw new Error("Error uploading image to GCS.");
-  }
+  return [signedUrl];
 };
 
 export const postRouter = createTRPCRouter({
-  uploadImageTRPC: protectedProcedure
-    .input(
-      z.object({
-        file: z.object({
-          filePath: z.string(),
-          fileName: z.string(),
-        }),
-      }),
-    )
-    .query(async ({ input }) => {
-      const imageUrl = await uploadImageToGCS(
-        input.file.fileName,
-        input.file.filePath,
-      );
-      return { imageUrl };
+  sendData: publicProcedure
+    .input(z.object({ fileName: z.string() }))
+    .query(({ input }) => {
+      return getFile(input.fileName);
+    }),
+  getData: publicProcedure
+    .input(z.object({ fileName: z.string() }))
+    .query(({ input }) => {
+      return isFile(input.fileName);
     }),
   getPostsbyUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
@@ -106,11 +84,11 @@ export const postRouter = createTRPCRouter({
           content: true,
           postId: true,
           userId: true,
-          categories:{
-            select:{
-              category:true
-            }
-          }
+          categories: {
+            select: {
+              category: true,
+            },
+          },
         },
       });
     }),
@@ -132,11 +110,11 @@ export const postRouter = createTRPCRouter({
           content: true,
           postId: true,
           userId: true,
-        categories:{
-          select:{
-            category:true
-          }
-        }
+          categories: {
+            select: {
+              category: true,
+            },
+          },
         },
       });
     }),
@@ -157,15 +135,14 @@ export const postRouter = createTRPCRouter({
         content: true,
         postId: true,
         userId: true,
-        categories:{
-          select:{
-            category:true
-          }
-        }
+        categories: {
+          select: {
+            category: true,
+          },
+        },
       },
     });
   }),
-
   getPostById: publicProcedure
     .input(
       z.object({
@@ -190,7 +167,6 @@ export const postRouter = createTRPCRouter({
         },
       });
     }),
-
   update: protectedProcedure
     .input(
       z.object({
@@ -214,14 +190,13 @@ export const postRouter = createTRPCRouter({
 
       return item;
     }),
-
   create: protectedProcedure
     .input(
       z.object({
         description: z.string(),
         title: z.string(),
         content: z.string(),
-        categories:z.array(z.string())
+        categories: z.array(z.string()),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -231,12 +206,11 @@ export const postRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           content: input.content,
-          categories:{create:{category:input.categories}}
+          categories: { create: { category: input.categories } },
         },
       });
       return item;
     }),
-
   delete: protectedProcedure
     .input(z.object({ postId: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -274,18 +248,19 @@ export const postRouter = createTRPCRouter({
       return section;
     }),
   getPostbyCategories: publicProcedure
-  .input(z.object({categories:z.string()}))
-  .query(async({ctx,input})=>{
+    .input(z.object({ categories: z.string() }))
+    .query(async ({ ctx, input }) => {
       return ctx.db.post.findMany({
-        take:ALL,
-        where:{
-          categories: {some:
-          {
-            category:{
-              has:input.categories
-            }
-          }},
-          hide:false,
+        take: ALL,
+        where: {
+          categories: {
+            some: {
+              category: {
+                has: input.categories,
+              },
+            },
+          },
+          hide: false,
         },
         select: {
           user: {
@@ -297,8 +272,7 @@ export const postRouter = createTRPCRouter({
           content: true,
           postId: true,
           userId: true,
-
         },
-      })
-  })
+      });
+    }),
 });

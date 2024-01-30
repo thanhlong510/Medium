@@ -6,7 +6,9 @@ import { useRouter } from "next/router";
 const Discovery = () => {
   const router = useRouter();
   const categoryName = router.query.category as string;
-  function capitalizeFirstLetter(str: string | null | undefined): string | null | undefined {
+  function capitalizeFirstLetter(
+    str: string | null | undefined,
+  ): string | null | undefined {
     if (str == null) {
       return str;
     }
@@ -14,7 +16,7 @@ const Discovery = () => {
   }
   const categorytoBackend = capitalizeFirstLetter(categoryName);
   const { data } = api.post.getPostbyCategories.useQuery({
-    categories: categorytoBackend ?? ''
+    categories: categorytoBackend ?? "",
   });
   console.log(categoryName);
   if (!data) return;

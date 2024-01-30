@@ -7,10 +7,10 @@ type inputType = RouterOutputs["post"]["getPostbyCategories"];
 //
 const PostIntroduction = ({ post }: { post: inputType }) => {
   return (
-    <div className="grid grid-cols-1 space-x-1  p-2 sm:grid-cols-2 md:gap-6 md:p-6 lg:grid-cols-3 font-sans ">
+    <div className="grid grid-cols-1 space-x-1  p-2 font-sans sm:grid-cols-2 md:gap-6 md:p-6 lg:grid-cols-3 ">
       {post?.map((a) => {
         return (
-          <div  key={a?.postId} className="col-span-1 rounded-lg  ">
+          <div key={a?.postId} className="col-span-1 rounded-lg  ">
             <Link href={`/post/${a?.postId}`}>
               <div className="group  cursor-pointer overflow-hidden   ">
                 <img
@@ -18,7 +18,7 @@ const PostIntroduction = ({ post }: { post: inputType }) => {
                   className="object-cove h-60 w-full rounded-lg transition-transform duration-200 ease-in-out group-hover:scale-105  "
                   src="/screen.jpg"
                 />
-                <div className="flex justify-between py-3 px-5">
+                <div className="flex justify-between px-5 py-3">
                   <div>
                     <p className="break-words text-2xl font-extrabold text-slate-100 hover:opacity-75 ">
                       {a.title}
@@ -26,7 +26,7 @@ const PostIntroduction = ({ post }: { post: inputType }) => {
                     <p className="font-semibold text-slate-400">
                       {a.user.name}
                     </p>
-                    <div className="flex flex-row gap-2 mt-3 items-center text-sm text-slate-500">
+                    <div className="mt-3 flex flex-row items-center gap-2 text-sm text-slate-500">
                       <IoMdBook />
                       <span>5 min read</span>
                     </div>
