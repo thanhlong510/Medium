@@ -16,13 +16,15 @@ const WriteStory = () => {
   const handleInterestToggle = (interest: string) => {
     if (selectedInterests.includes(interest)) {
       // If the interest is already selected, remove it
-      setSelectedInterests(selectedInterests.filter(item => item !== interest));
+      setSelectedInterests(
+        selectedInterests.filter((item) => item !== interest),
+      );
     } else {
       // If the interest is not selected, add it
       setSelectedInterests([...selectedInterests, interest]);
     }
   };
-  console.log(selectedInterests)
+  console.log(selectedInterests);
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -61,9 +63,11 @@ const WriteStory = () => {
     <div className="relative">
       <div className="flex items-center justify-center">
         <div className="w-full rounded   sm:max-w-3xl md:max-w-2xl lg:max-w-5xl ">
-          <div className="flex w-full mb-[15px] items-center">
-            <MultiSelectCategory handleInterestToggle={handleInterestToggle}  selectedInterests={selectedInterests} />
-          
+          <div className="mb-[15px] flex w-full items-center">
+            <MultiSelectCategory
+              handleInterestToggle={handleInterestToggle}
+              selectedInterests={selectedInterests}
+            />
           </div>
           <input
             type="text"
@@ -76,7 +80,7 @@ const WriteStory = () => {
 
           <textarea
             id="description"
-            className="mt-[0.75rem] resize-none min-h-[50px] h-auto w-full rounded py-2 text-2xl font-medium focus:outline-none"
+            className="mt-[0.75rem] h-auto min-h-[50px] w-full resize-none rounded py-2 text-2xl font-medium focus:outline-none"
             value={description}
             onChange={handleDescriptionChange}
             placeholder="Post Description ..."
@@ -84,26 +88,22 @@ const WriteStory = () => {
 
           <textarea
             id="content"
-            className="mt-1 resize-none h-auto w-full rounded py-2 text-xl font-normal focus:outline-none"
+            className="mt-1 h-auto w-full resize-none rounded py-2 text-xl font-normal focus:outline-none"
             value={content}
             placeholder="Create your content ..."
             onChange={handleContentChange}
           />
-
-         
         </div>
       </div>
       <button
-            className={`mt-4 absolute top-8 right-8 font-semibold rounded-full bg-blue-700 px-4 py-2 text-white ${
-              isSubmitting
-                ? "cursor-not-allowed opacity-50"
-                : "hover:bg-blue-600"
-            }`}
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Publishing..." : "Publish"}
-          </button>
+        className={`absolute right-8 top-8 mt-4 rounded-full bg-blue-700 px-4 py-2 font-semibold text-white ${
+          isSubmitting ? "cursor-not-allowed opacity-50" : "hover:bg-blue-600"
+        }`}
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Publishing..." : "Publish"}
+      </button>
     </div>
   );
 };

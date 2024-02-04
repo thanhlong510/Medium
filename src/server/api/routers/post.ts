@@ -158,6 +158,12 @@ export const postRouter = createTRPCRouter({
           user: {
             select: { name: true, image: true, id: true },
           },
+          categories:{
+            select:{
+              category:true,
+              id:true
+            }
+          },
           createdAt: true,
           description: true,
           title: true,
@@ -174,6 +180,8 @@ export const postRouter = createTRPCRouter({
         title: z.string(),
         content: z.string(),
         postId: z.string(),
+        // categories: z.array(z.string()),
+        // categoryId: z.string()
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -185,6 +193,13 @@ export const postRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           content: input.content,
+        //   categories: { update: { where:{
+        //     id: input.categoryId
+        //   },
+        //   data:{
+        //     category: input.categories 
+        //   } 
+        //  } },
         },
       });
 

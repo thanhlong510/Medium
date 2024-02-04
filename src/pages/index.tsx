@@ -24,8 +24,8 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <>
-          <div className="w-full bg-yellow-400 font-sans">
-            <div className="m-auto max-w-7xl">
+          <div className="w-full py-9 bg-yellow-400 font-sans">
+            <div className="m-auto  max-w-7xl">
               <div className="flex  items-center lg:py-0">
                 <div className="mx-4 space-y-5 py-10">
                   <h1 className="max-w-xl font-serif text-6xl">
@@ -42,31 +42,34 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="mx-auto grid pt-10  max-w-6xl sm:grid-cols-1 md:grid-cols-1  lg:grid-cols-11">
-            <div className="sm:col-span-1 md:col-span-1   lg:col-span-7  ">
+          <div className="mx-auto grid max-w-6xl  pt-10 sm:grid-cols-1 md:grid-cols-1  lg:grid-cols-11">
+            <div className="mx-auto sm:col-span-1 md:col-span-1   lg:col-span-7  ">
               <div className="flex flex-col gap-3 p-2 ">
                 <div className="max-w-[40rem]">
                   <PostCard post={data} />
                 </div>
               </div>
             </div>
-            <div className="mt-3 sm:hidden lg:col-span-4  lg:col-start-8 lg:block">
-              <p className="mb-5 font-semibold text-base font-serif text-[#242424]">
-              Discover more of what matters to you
+            <div className="mt-3 hidden lg:col-span-4  lg:col-start-8 lg:block">
+              <p className="mb-5 font-serif text-base font-semibold text-[#242424]">
+                Discover more of what matters to you
               </p>
-             
+
               <div className="flex flex-wrap gap-2">
                 {interestsOptions.map((a) => {
                   return (
-                    <Link key={Math.random().toString(36).substring(7)} href={`/discovery/${a.toLowerCase()}`}>
-                      <button className="flex items-center border border-solid  rounded-3xl bg-[#F2F2F2] text-sm font-normal p-[10px] ">
+                    <Link
+                      key={Math.random().toString(36).substring(7)}
+                      href={`/discovery/${a.toLowerCase()}`}
+                    >
+                      <button className="flex items-center rounded-3xl border  border-solid bg-[#F2F2F2] p-[10px] text-sm font-normal ">
                         {a}
                       </button>
                     </Link>
                   );
                 })}
               </div>
-              <p className="text-[#1A8917] text-xl hover:text-lime-500 cursor-pointer mt-4">
+              <p className="mt-4 cursor-pointer text-xl text-[#1A8917] hover:text-lime-500">
                 See more topics
               </p>
             </div>

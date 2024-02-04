@@ -19,7 +19,7 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
 
   const handleReplyButtonClick = async (commentId: string) => {
     setReplyingCommentId((prev) => (prev === commentId ? null : commentId));
-    await refetch();
+    await refetch()
   };
 
   return (
@@ -83,3 +83,4 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
 };
 
 export default CommentList;
+

@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { api } from '~/utils/api';
-import { useRouter } from 'next/router';
-import { GoPencil } from 'react-icons/go';
-import SearchBar from '../components/SearchBar';
-import PostCard from '../components/PostCard';
-import { RouterOutputs } from '~/utils/api';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { api } from "~/utils/api";
+import { useRouter } from "next/router";
+import { GoPencil } from "react-icons/go";
+import SearchBar from "../components/SearchBar";
+import PostCard from "../components/PostCard";
+import { RouterOutputs } from "~/utils/api";
+import EditProfileForm from "../components/EditProfileForm";
 
-type inputType = RouterOutputs['post']['getPosts'];
+type inputType = RouterOutputs["post"]["getPosts"];
 
 const ProfilePage = () => {
-  const [bold, setBold] = useState('1');
+  const [bold, setBold] = useState("1");
   const router = useRouter();
   const { data: session } = useSession();
   const profileId = router.query.profileId as string;
@@ -24,13 +24,24 @@ const ProfilePage = () => {
   const { data: postUnhidedata } = api.post.getUnhidePostbyUserId.useQuery({
     userId: profileId,
   });
-  const [showData, setShowdata] = useState<inputType | undefined>(postUnhidedata);
+  const [showData, setShowdata] = useState<inputType | undefined>(
+    postUnhidedata,
+  );
   const { data: profileData } = api.profile.getinforProfilebyUserId.useQuery({
     userId: profileId,
   });
   const { data: bioData } = api.profile.getBio.useQuery({
     userId: profileId,
   });
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+
+  const handleOpenEditProfile = () => {
+    setIsEditProfileOpen(true);
+  };
+
+  const handleCloseEditProfile = () => {
+    setIsEditProfileOpen(false);
+  };
 
   useEffect(() => {
     // Kiểm tra xem dữ liệu từ postUnhidedata đã sẵn có chưa
@@ -41,15 +52,15 @@ const ProfilePage = () => {
 
   const handleBold = (data: string) => {
     setBold(data);
-    if (data == '1') {
+    if (data == "1") {
       setShowdata(postUnhidedata);
-    } else if (data == '2') {
+    } else if (data == "2") {
       setShowdata(postHidedata);
     }
   };
-
+if(bioData)
   return (
-    <div className=" m-auto sm:max-w-xs md:max-w-screen-xl  lg:max-w-2xl ">
+    <div className=" mx-auto sm:max-w-72 md:max-w-screen-md  lg:max-w-2xl ">
       <div className="mx-auto flex w-full  flex-col py-8 ">
         <div className="flex flex-col gap-5  ">
           <div className="flex flex-col gap-5">
@@ -65,8 +76,12 @@ const ProfilePage = () => {
               <div>
                 <div className="flex items-center justify-end gap-2">
                   <div className="flex flex-row items-center gap-2 ">
-                    {session?.user.id==profileId? <Link href={`/profile/edit/${profileId}`}>
-                      <button className="relative flex h-[40px] w-[40px] items-center overflow-hidden rounded-full border-2 first-line:border-blue-500">
+                    {session?.user.id == profileId ? (
+                    <div>
+                      <button
+                        onClick={handleOpenEditProfile}
+                        className="relative flex h-[40px] w-[40px] items-center overflow-hidden rounded-full border-2 first-line:border-blue-500"
+                      >
                         <div className="absolute inset-0 flex items-center justify-center">
                           <svg
                             className="h-[40px] w-[40px] pl-2 pt-2 text-blue-500"
@@ -81,9 +96,13 @@ const ProfilePage = () => {
                           </svg>
                         </div>
                       </button>
-                    </Link>:''}
-                   
-
+                      <EditProfileForm bioData={bioData} isOpen={isEditProfileOpen} onClose={handleCloseEditProfile} />
+                      </div>
+                      
+                    ) : (
+                      ""
+                    )}
+                    
                     {postData == undefined ? "" : <SearchBar data={postData} />}
                   </div>
                 </div>
@@ -142,7 +161,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-    </div> 
+    </div>
   );
 };
 

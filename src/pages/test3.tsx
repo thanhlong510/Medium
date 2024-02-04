@@ -1,13 +1,10 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "~/utils/api";
-import { useState } from "react";
+import WritePost from "./components/WritePost";
 import { useSession } from "next-auth/react";
-import WritePost from "../components/WritePost";
-
-
-const EditPage = () => {
-  const {data:session}= useSession()
+const Test3 = () => {
+    const {data:session}= useSession()
     const router = useRouter();
     const slug = router.query.slug as string;
     const [title, setTitle] = useState("");
@@ -75,9 +72,10 @@ const EditPage = () => {
       };
       if(session?.user.id !== userId) return;
   return (
-    <div className=' '>
-       <WritePost buttonName="Update" content={content} description={description} handleContentChange={handleContentChange} handleDescriptionChange={handleDescriptionChange} handleInterestToggle={handleInterestToggle} handleSubmit={handleSubmit} handleTitleChange={handleTitleChange} isSubmitting={isSubmitting} selectedInterests={selectedInterests} title={title} />
+    <div className='block w-full md:flex flex-row items-center justify-center h-screen '>
+       <WritePost content={content} description={description} handleContentChange={handleContentChange} handleDescriptionChange={handleDescriptionChange} handleInterestToggle={handleInterestToggle} handleSubmit={handleSubmit} handleTitleChange={handleTitleChange} isSubmitting={isSubmitting} selectedInterests={selectedInterests} title={title} />
     </div>
   )
-};
-export default EditPage;
+}
+
+export default Test3

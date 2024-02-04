@@ -23,7 +23,7 @@ const CustomTooltip: React.FC<TooltipProps> = ({
   const deletePost = api.post.delete.useMutation();
   const hidePost = api.post.hidePost.useMutation();
   return (
-    <div className="bg- flex flex-col">
+    <div className=" ">
       <div>
         <Link href={`/edit/${postId}`}>
           <button
@@ -31,7 +31,7 @@ const CustomTooltip: React.FC<TooltipProps> = ({
               onEditClick();
               e.stopPropagation();
             }}
-            className="mb-[8px]"
+            className="font-normal text-slate-300 mb-[8px]"
           >
             Edit
           </button>
@@ -39,7 +39,7 @@ const CustomTooltip: React.FC<TooltipProps> = ({
       </div>
       <div>
         <button
-          className="mb-[8px]"
+          className="mb-[8px] font-normal text-slate-300"
           onClick={async (e) => {
             await deletePost.mutateAsync({
               postId: postId,
@@ -54,7 +54,7 @@ const CustomTooltip: React.FC<TooltipProps> = ({
       </div>
       <div>
         <button
-          className="mb-[8px]"
+          className="mb-[8px] font-normal text-slate-300"
           onClick={async (e) => {
             await hidePost.mutateAsync({
               postId: postId,
@@ -105,9 +105,10 @@ const ToolTip = ({ postId, userId }: ToolTipProps) => {
       visible={isTooltipOpen}
       onClickOutside={() => setIsTooltipOpen(false)}
       placement="bottom"
+    
     >
       <div
-        className="w-16"
+        className="w-16 "
         onMouseEnter={() => setIsTooltipOpen(true)}
         // onMouseLeave={() => setIsTooltipOpen(false)}
         onClick={() => setIsTooltipOpen(!isTooltipOpen)}
