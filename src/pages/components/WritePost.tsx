@@ -1,15 +1,13 @@
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { api } from "~/utils/api";
+import React from "react";
 import MultiSelectCategory from "../components/MultiSelectCategory";
+import { FaRegImages } from "react-icons/fa";
 interface WriteStoryProps {
   title: string;
   description: string;
   content: string;
   isSubmitting: boolean;
   selectedInterests: string[];
-  buttonName?:string;
+  buttonName?: string;
   handleInterestToggle: (interest: string) => void;
   handleTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -27,17 +25,24 @@ const WritePost: React.FC<WriteStoryProps> = ({
   handleTitleChange,
   isSubmitting,
   selectedInterests,
-  buttonName
+  buttonName,
 }) => {
   return (
     <div className="relative">
       <div className="flex items-center justify-center">
         <div className="w-full rounded   sm:max-w-3xl md:max-w-2xl lg:max-w-5xl ">
-          <div className="mb-[15px] flex w-full items-center">
+          <div className="mb-[15px] flex  w-full items-center space-x-5">
             <MultiSelectCategory
               handleInterestToggle={handleInterestToggle}
               selectedInterests={selectedInterests}
             />
+            <div className="mt-[60px] flex items-center space-x-1">
+              <FaRegImages className=" h-[20px] w-[20px]" />
+              <p className="cursor-pointer text-center text-sm font-semibold text-[#334155]">
+                {" "}
+                Add image
+              </p>
+            </div>
           </div>
           <input
             type="text"
@@ -58,7 +63,7 @@ const WritePost: React.FC<WriteStoryProps> = ({
 
           <textarea
             id="content"
-            className="mt-1 min-h-[200px] h-auto w-full resize-none rounded py-2 text-xl font-normal focus:outline-none"
+            className="mt-1 h-auto min-h-[200px] w-full resize-none rounded py-2 text-xl font-normal focus:outline-none"
             value={content}
             placeholder="Create your content ..."
             onChange={handleContentChange}

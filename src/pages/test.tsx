@@ -1,34 +1,15 @@
 import React, { useState } from "react";
 import EditProfileForm from "./components/EditProfileForm";
 import { api } from "~/utils/api";
+import UploadFile from "./components/UploadFile";
 
 
 export function Test() {
-  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
- 
-  const handleOpenEditProfile = () => {
-    setIsEditProfileOpen(true);
-  };
+  const a ='xin chao'
+  console.log(`${a} moi nguoi`)
 
-  const handleCloseEditProfile = () => {
-    setIsEditProfileOpen(false);
-  };
-
-  const { data: bio } = api.profile.getBio.useQuery({
-    userId: "clrnpelmp00002i64tnml5r46"
-  });
-  if(!bio) return;
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <button
-        onClick={handleOpenEditProfile}
-        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-      >
-        Open Edit Profile Form
-      </button>
-
-      <EditProfileForm bioData={bio} isOpen={isEditProfileOpen} onClose={handleCloseEditProfile} />
-    </div>
+    <UploadFile/>
   );
 };
 export default Test;

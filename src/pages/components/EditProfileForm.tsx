@@ -1,27 +1,38 @@
 import React, { useState } from "react";
 import UploadFile from "./UploadFile";
-import { RouterOutputs } from "~/utils/api";
+import { RouterOutputs, api } from "~/utils/api";
 import { FaEarthAfrica } from "react-icons/fa6";
 type inputType = RouterOutputs["profile"]["getBio"];
 interface EditProfileFormProps {
   isOpen: boolean;
   onClose: () => void;
   bioData: inputType;
+  router?:string
 }
 
 const EditProfileForm: React.FC<EditProfileFormProps> = ({
   isOpen,
   onClose,
   bioData,
+  router,
 }) => {
+  const submit = api.profile.createBio.useMutation();
   const [bio, setBio] = useState(bioData?.bio);
-
+  
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(e.target.value);
   };
-  const handleSubmit = () => {
-    // Xử lý logic khi nhấn nút lưu
-    console.log("Save button clicked:");
+  const handleSubmit = async () => {
+    try {
+      submit.mutate({
+        userId: router ?? '',
+        bio: bio?? "",
+      });
+    } catch (error) {
+      console.error("Error submitting post:", error);
+    } finally {
+      onClose()
+    }
   };
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Đóng form chỉ khi nhấn vào background đen (overlay)
@@ -30,6 +41,9 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
     }
   };
   const counter = bio?.length;
+  const {data:avatarImage}= api.profile.getAvataruser.useQuery({
+    fileName:`${router}avatar`
+  })
   return (
     <>
       {isOpen && (
@@ -63,12 +77,12 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
             <div className="pb-5  ">
               <div className="mt-2 flex items-center justify-between text-xl">
                 <p className="mb-2  font-bold ">Profile Picture</p>
-                <button className="text-sky-800 ">
-                  <UploadFile />
+                <button className="text-sky-800 font-medium">
+                  <UploadFile fileName={`${router}avatar`}/>
                 </button>
               </div>
               <div className="mx-auto flex  h-[168px] w-[168px]">
-                <img className="rounded-full " src="/download.png" />
+                <img className="rounded-full " alt='' src={Array.isArray(avatarImage) ? avatarImage[0] : avatarImage ?? "/download.png"} />
               </div>
             </div>
             <div className="pb-5  ">
@@ -97,7 +111,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
            
             <div className="flex space-x-1">
             <button
-                onClick={handleSubmit}
+                onClick={onClose}
                 className=" font-semibold rounded-lg bg-slate-600 px-4 py-[6px]   text-white hover:bg-green-600"
               >
                 Cancel

@@ -4,48 +4,11 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { Storage } from "@google-cloud/storage";
-import path from "path";
-import fs from "fs";
 import { ALL } from "dns";
 
-const storage = new Storage({
-  credentials: {
-    client_email: "cloudstorage@sortable-ai.iam.gserviceaccount.com",
-    private_key: process.env.SECRET_FOR_LONG,
-  },
-  projectId: "sortable-ai",
-});
-
-const isFile = async (a: string) => {
-  const file = storage.bucket("medium-blog-project").file(`${a}`);
-
-  const b = await file.exists();
-  return b;
-};
-
-const getFile = async (a: string) => {
-  const file = storage.bucket("medium-blog-project").file(`${a}`);
-
-  const [signedUrl] = await file.getSignedUrl({
-    action: "read",
-    expires: Date.now() + 300 * 1000,
-  });
-
-  return [signedUrl];
-};
 
 export const postRouter = createTRPCRouter({
-  sendData: publicProcedure
-    .input(z.object({ fileName: z.string() }))
-    .query(({ input }) => {
-      return getFile(input.fileName);
-    }),
-  getData: publicProcedure
-    .input(z.object({ fileName: z.string() }))
-    .query(({ input }) => {
-      return isFile(input.fileName);
-    }),
+  
   getPostsbyUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(({ ctx, input }) => {

@@ -71,7 +71,7 @@ const MultiSelectCategory: React.FC<MultiSelectCategoryProps> = ({
         ))}
       </div>
       <div className="relative mt-[60px]">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center space-x-1">
           <BiCategory
             className="h-[20px] w-[20px]"
             onClick={handleDropdownToggle}

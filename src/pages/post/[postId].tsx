@@ -14,6 +14,9 @@ const Post = () => {
   const postQuery = api.post.getPostById.useQuery({
     postId: postId,
   });
+  const {data:avatarImage}= api.profile.getAvataruser.useQuery({
+    fileName:`${session?.user.id}avatar`
+   })
   const data = postQuery.data;
   if (!data ) return;
   
@@ -34,7 +37,7 @@ const Post = () => {
             <div className="flex items-center  space-x-4 ">
               <img
                 alt=""
-                src={`${data?.user.image}`}
+                src={Array.isArray(avatarImage) ? avatarImage[0] : avatarImage ?? "/download.png"}
                 className="h-10 w-10 rounded-full"
               />
               <div>

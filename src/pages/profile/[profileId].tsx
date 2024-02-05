@@ -33,6 +33,9 @@ const ProfilePage = () => {
   const { data: bioData } = api.profile.getBio.useQuery({
     userId: profileId,
   });
+  const {data: avatarImage} = api.profile.getAvataruser.useQuery({
+  fileName:`${profileId}avatar`
+  })
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
   const handleOpenEditProfile = () => {
@@ -67,7 +70,7 @@ if(bioData)
             <div className="flex items-center justify-between">
               <div className="flex-shrink-0 rounded-full border-[2px] border-solid">
                 <img
-                  src="/screen.jpg"
+                  src={Array.isArray(avatarImage) ? avatarImage[0] : avatarImage ?? "/download.png"}
                   alt={``}
                   className="h-[112px] w-[112px] rounded-full object-cover p-[3px]"
                 />
@@ -96,7 +99,7 @@ if(bioData)
                           </svg>
                         </div>
                       </button>
-                      <EditProfileForm bioData={bioData} isOpen={isEditProfileOpen} onClose={handleCloseEditProfile} />
+                      <EditProfileForm router={profileId} bioData={bioData} isOpen={isEditProfileOpen} onClose={handleCloseEditProfile} />
                       </div>
                       
                     ) : (

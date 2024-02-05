@@ -12,9 +12,26 @@ const storage = new Storage({
   },
   projectId: "sortable-ai",
 });
-const bucketName = "medium-blog-project"; // Replace with your GCP bucket name
+
+
+
+const getFile = async (a: string) => {
+  const file = storage.bucket("medium-blog-project").file(`${a}`);
+
+  const [signedUrl] = await file.getSignedUrl({
+    action: "read",
+    expires: Date.now() + 300 * 1000,
+  });
+
+  return [signedUrl];
+};
 
 export const profileRouter = createTRPCRouter({
+  getAvataruser: publicProcedure
+    .input(z.object({ fileName: z.string() }))
+    .query(({ input }) => {
+      return getFile(input.fileName);
+    }),
   getinforProfilebyUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {

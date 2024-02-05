@@ -1,4 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+interface UploadFileProps {
+  fileName?: string
+
+}
+
+
 
 export function useFileUpload() {
   return async (filename: string, file: File) => {
@@ -16,48 +23,75 @@ export function useFileUpload() {
   };
 }
 
-const UploadFile = () => {
+const UploadFile: React.FC<UploadFileProps> = ({fileName}) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const uploadFile = useFileUpload();
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    const uploadSelectedFile = async () => {
+      try {
+        if (!selectedFile) {
+          // Handle case when no file is selected
+          return;
+        }
+        const uploadOk = await uploadFile(fileName ?? selectedFile.name, selectedFile);
+        if (uploadOk) {
+          // show success
+          console.log("Upload successful");
+        } else {
+          // show error
+          console.error("Upload failed");
+        }
+      } catch (error) {
+        // Handle other errors that might occur during file upload
+        console.error("Error during file upload:", error);
+      }
+    };
+
+    uploadSelectedFile().catch((error) => {
+      // Handle any unhandled errors during uploadSelectedFile
+      console.error("Error during uploadSelectedFile:", error);
+    });
+  }, [selectedFile, uploadFile]);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
     setSelectedFile(file);
   };
-
-  const handleUpload = async () => {
-    try {
-      if (!selectedFile) {
-        // Handle case when no file is selected
-        return;
-      }
-      const uploadOk = await uploadFile(selectedFile.name, selectedFile);
-      if (uploadOk) {
-        // show success
-        console.log("Upload successful");
-      } else {
-        // show error
-        console.error("Upload failed");
-      }
-    } catch (error) {
-      // Handle other errors that might occur during file upload
-      console.error("Error during file upload:", error);
-    }
-  };
+  console.log(selectedFile?.name)
+  // const handleUpload = async () => {
+  //   try {
+  //     if (!selectedFile) {
+  //       // Handle case when no file is selected
+  //       return;
+  //     }
+  //     const uploadOk = await uploadFile(selectedFile.name, selectedFile);
+  //     if (uploadOk) {
+  //       // show success
+  //       console.log("Upload successful");
+  //     } else {
+  //       // show error
+  //       console.error("Upload failed");
+  //     }
+  //   } catch (error) {
+  //     // Handle other errors that might occur during file upload
+  //     console.error("Error during file upload:", error);
+  //   }
+  // };
 
   return (
-    <div> 
-      <label className="relative hover:cursor-pointer cursor-pointer">
-        <button onClick={handleUpload} className="rounded bg-none px-4 py-2 text-blue ">
+    <div>
+      <label className="relative flex cursor-pointer items-center">
+        <button className="relative z-10 rounded  p-4    focus:outline-none focus:ring">
           Add Image
         </button>
+
         <input
           type="file"
-          className="absolute left-0 top-0 h-full  w-full cursor-pointer opacity-0"
+          className="absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
           onChange={handleFileSelect}
         />
       </label>
-
     </div>
   );
 };
