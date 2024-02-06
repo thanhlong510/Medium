@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { api } from "~/utils/api";
 import MultiSelectCategory from "../components/MultiSelectCategory";
-
+import { FaRegImages } from "react-icons/fa";
 const WriteStory = () => {
   const { status } = useSession();
   const router = useRouter();
@@ -63,11 +63,18 @@ const WriteStory = () => {
     <div className="relative">
       <div className="flex items-center justify-center">
         <div className="w-full rounded   sm:max-w-3xl md:max-w-2xl lg:max-w-5xl ">
-          <div className="mb-[15px] flex w-full items-center">
+          <div className="mb-[15px] flex w-full space-x-5 items-center">
             <MultiSelectCategory
               handleInterestToggle={handleInterestToggle}
               selectedInterests={selectedInterests}
             />
+             <div className="mt-[60px] flex items-center space-x-1">
+              <FaRegImages className=" h-[20px] w-[20px]" />
+              <p className="cursor-pointer text-center text-sm font-semibold text-[#334155]">
+                {" "}
+                Add image
+              </p>
+            </div>
           </div>
           <input
             type="text"

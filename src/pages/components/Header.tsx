@@ -3,6 +3,7 @@ import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaSignOutAlt } from "react-icons/fa";
+import { FaSignInAlt } from "react-icons/fa";
 import { api } from "~/utils/api";
 const Header = () => {
   const { data: session, status } = useSession();
@@ -21,7 +22,7 @@ const Header = () => {
                 src="/Medium_(website)_logo.svg"
               />
             </Link>
-            <div className="ml-5 hidden items-center space-x-5 md:inline-flex">
+            <div className="ml-5   hidden items-center space-x-5 md:inline-flex">
               <h3> About</h3>
               {status == "authenticated" ? (
                 <Link href={`/profile/${session.user.id}`}>
@@ -62,14 +63,14 @@ const Header = () => {
                 </div>
               </div>
             ) : (
-              <h3 className="rounded-full border border-green-600 px-4 py-1">
+              <h3 className="rounded-full border text-sm border-green-600 px-4 py-1">
                 Get Started
               </h3>
             )}
           </div>
         </header>
       </div>
-      <div className="h-[75px]"></div>
+      <div className="h-[73px]"></div>
     </div>
   );
 };
@@ -87,7 +88,10 @@ function AuthShowcase() {
             <p className="hidden md:block">Sign out</p>
           </div>
         ) : (
-          "Sign in"
+          <div className="flex items-center space-x-1">
+            <FaSignInAlt />
+            <p className="hidden md:block">Sign in</p>
+          </div>
         )}
       </button>
     </div>

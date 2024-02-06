@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-  createTRPCRouter,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { Storage } from "@google-cloud/storage";
 
 const storage = new Storage({
@@ -13,8 +10,6 @@ const storage = new Storage({
   projectId: "sortable-ai",
 });
 
-
-
 const getFile = async (a: string) => {
   const file = storage.bucket("medium-blog-project").file(`${a}`);
 
@@ -23,7 +18,12 @@ const getFile = async (a: string) => {
     expires: Date.now() + 300 * 1000,
   });
 
-  return [signedUrl];
+  const b = await file.exists();
+  if (!b[0]) {
+    return "undefined";
+  } else {
+    return [signedUrl];
+  }
 };
 
 export const profileRouter = createTRPCRouter({
@@ -49,12 +49,12 @@ export const profileRouter = createTRPCRouter({
   createBio: publicProcedure
     .input(z.object({ userId: z.string(), bio: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const bioData = await  ctx.db.bio.findUnique({
+      const bioData = await ctx.db.bio.findUnique({
         where: {
           userId: input.userId,
         },
       });
-      if (!bioData ) {
+      if (!bioData) {
         return ctx.db.bio.create({
           data: {
             userId: input.userId,
@@ -92,26 +92,3 @@ export const profileRouter = createTRPCRouter({
       });
     }),
 });
-
-// Helper function to upload an image to GCP Storage
-// async function uploadImageToGCP(imagePath: string): Promise<string> {
-//   const bucket = storage.bucket(bucketName);
-//   const uniqueFileName = `${Date.now()}_${Math.floor(
-//     Math.random() * 1000,
-//   )}_${imagePath}`;
-//   const file = bucket.file(uniqueFileName);
-
-//   await file.save(imagePath, {
-//     metadata: {
-//       contentType: "image/jpeg", // Set the appropriate content type for your image
-//     },
-//   });
-
-//   // Make the file publicly accessible
-//   await file.makePublic();
-
-//   // Get the public URL of the uploaded file
-//   const imageUrl = `https://storage.googleapis.com/${bucketName}/${uniqueFileName}`;
-
-//   return imageUrl;
-// }

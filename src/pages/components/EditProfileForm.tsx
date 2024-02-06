@@ -44,6 +44,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
   const {data:avatarImage}= api.profile.getAvataruser.useQuery({
     fileName:`${router}avatar`
   })
+  
   return (
     <>
       {isOpen && (

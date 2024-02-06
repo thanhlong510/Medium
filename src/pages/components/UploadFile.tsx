@@ -58,7 +58,6 @@ const UploadFile: React.FC<UploadFileProps> = ({fileName}) => {
     const file = e.target.files?.[0] ?? null;
     setSelectedFile(file);
   };
-  console.log(selectedFile?.name)
   // const handleUpload = async () => {
   //   try {
   //     if (!selectedFile) {

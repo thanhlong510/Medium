@@ -70,7 +70,7 @@ if(bioData)
             <div className="flex items-center justify-between">
               <div className="flex-shrink-0 rounded-full border-[2px] border-solid">
                 <img
-                  src={Array.isArray(avatarImage) ? avatarImage[0] : avatarImage ?? "/download.png"}
+                  src={Array.isArray(avatarImage) ? avatarImage[0] : avatarImage }
                   alt={``}
                   className="h-[112px] w-[112px] rounded-full object-cover p-[3px]"
                 />
