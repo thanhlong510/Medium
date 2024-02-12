@@ -9,14 +9,29 @@ const PostCard = ({ post }: { post: inputType }) => {
       {post?.map((a) => {
         return (
           <Link key={a?.postId} href={`/post/${a?.postId}`}>
-            <div className="flex h-[10rem]  cursor-pointer items-center justify-between gap-[1rem] border-b border-solid border-gray-200">
+            <div className="mx-2 flex h-[10rem] cursor-pointer  items-center justify-between gap-[1rem] border-b border-solid border-gray-200 sm:mx-0">
               <div className="">
                 <div className=" flex gap-[.4rem]">
                   <div className="grid h-[1.4rem] w-[1.4rem] place-items-center overflow-hidden rounded-full">
-                    <img
+                    {a.user.bio?.avatarImage == null ||
+                    a.user.bio?.avatarImage == "{}" ||
+                    a.user.bio?.avatarImage == "" ||
+                    a.user.bio?.avatarImage == undefined ? (
+                      <img
+                        className="h-[40px] w-[40px] object-cover"
+                        src={a.user.image ?? ""}
+                      />
+                    ) : (
+                      <img
+                        className="h-[40px] w-[40px] object-cover"
+                        src={a.user.bio?.avatarImage ?? ""}
+                      />
+                    )}
+
+                    {/* <img
                       className="h-[40px] w-[40px] object-cover"
                       src="/download.png"
-                    />
+                    /> */}
                   </div>
                   <div className=" font-semibold text-[#787878]">
                     {a.user.name}
@@ -24,17 +39,21 @@ const PostCard = ({ post }: { post: inputType }) => {
                 </div>
                 <h1 className="text-lg font-bold ">{a.title}</h1>
                 <div className="text-[#787878]">{a.description}</div>
-                <div className="flex items-center justify-between text-[#787878]">
+                <div className="items-center justify-between text-[#787878] sm:hidden md:flex">
                   <span className="my-2 text-[.8rem]">
-                    {`${dayjs(a.createdAt).format("YYYY-MM-DD HH:mm:ss")}`}
+                    <span className="">
+                      {`${dayjs(a.createdAt).format("MMM D, YYYY")}`}
+                    </span>
+
                     {a.categories.map((b) => {
                       return b.category.map((c) => {
                         return (
                           <Link
                             key={Math.random().toString(36).substring(7)}
                             href={`/discovery/${c}`}
+                            className=" "
                           >
-                            <span className="mx-2 rounded-full bg-[#F2F3F2] p-2">
+                            <span className="mx-2   rounded-full bg-[#F2F3F2] p-2">
                               {c}
                             </span>
                           </Link>
@@ -44,7 +63,7 @@ const PostCard = ({ post }: { post: inputType }) => {
                   </span>
                 </div>
               </div>
-              <div className="group">
+              <div className="group hidden sm:block">
                 <img
                   alt=""
                   className="h-[134px] w-[200px] max-w-none rounded-[6px] transition-transform duration-200 ease-in-out group-hover:scale-105"

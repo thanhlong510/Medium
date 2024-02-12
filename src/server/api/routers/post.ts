@@ -8,7 +8,11 @@ import { ALL } from "dns";
 
 
 export const postRouter = createTRPCRouter({
-  
+  getPostexample: publicProcedure
+  .input(z.object({content:z.string()}))
+  .query(({input})=>{
+    return input.content
+  }),
   getPostsbyUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(({ ctx, input }) => {
@@ -39,7 +43,11 @@ export const postRouter = createTRPCRouter({
         },
         select: {
           user: {
-            select: { name: true, image: true, email: true },
+            select: { name: true, image: true, email: true, bio:{
+              select:{
+                avatarImage:true
+              }
+            } },
           },
           createdAt: true,
           description: true,
@@ -65,7 +73,11 @@ export const postRouter = createTRPCRouter({
         },
         select: {
           user: {
-            select: { name: true, image: true, email: true },
+            select: { name: true, image: true, email: true,bio:{
+              select:{
+                avatarImage:true
+              }
+            } },
           },
           createdAt: true,
           description: true,
@@ -90,7 +102,13 @@ export const postRouter = createTRPCRouter({
       orderBy: [{ createdAt: "desc" }],
       select: {
         user: {
-          select: { name: true, image: true, email: true },
+          select: { name: true, image: true, email: true,
+          bio:{
+            select:{
+              avatarImage:true
+            }
+          }
+          },
         },
         createdAt: true,
         description: true,
@@ -175,6 +193,7 @@ export const postRouter = createTRPCRouter({
         title: z.string(),
         content: z.string(),
         categories: z.array(z.string()),
+        coverImageName:z.string(z.string())
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -185,6 +204,7 @@ export const postRouter = createTRPCRouter({
           description: input.description,
           content: input.content,
           categories: { create: { category: input.categories } },
+          coverImageName:input.coverImageName
         },
       });
       return item;

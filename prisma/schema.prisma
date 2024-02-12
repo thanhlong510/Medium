@@ -14,8 +14,8 @@ model Bio {
     id     String @id @default(cuid())
     user   User   @relation(fields: [userId], references: [id])
     userId String @unique
-    bio    String
-
+    bio    String? @default("")
+    avatarImage String?  @default("")
     @@index([userId])
 }
 
@@ -27,6 +27,7 @@ model Post {
     user        User         @relation(fields: [userId], references: [id])
     userId      String
     imageId     String       @default("")
+    coverImageName String?  
     description String
     content     String
     hide        Boolean      @default(false)

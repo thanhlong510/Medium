@@ -46,7 +46,7 @@ const CustomTooltip: React.FC<TooltipProps> = ({
             });
             e.stopPropagation();
             onDeleteClick();
-            await router.push(`/profile/${userId}`);
+            await router.push(`/`);
           }}
         >
           Delete

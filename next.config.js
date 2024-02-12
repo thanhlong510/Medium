@@ -3,9 +3,20 @@
  * for Docker builds.
  */
 await import("./src/env.js");
+import removeImports from "next-remove-imports"
 
+export default removeImports()({
+  // ✅  options...
+  webpack: function (config) {
+    config.module.rules.push({
+      test: /\.md$/,
+      use: "raw-loader"
+    });
+    return config;
+  }
+});
 /** @type {import("next").NextConfig} */
-const config = {
+export const config = {
   reactStrictMode: true,
 
   /**
@@ -19,4 +30,4 @@ const config = {
   },
 };
 
-export default config;
+

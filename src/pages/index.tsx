@@ -1,8 +1,9 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
-import React from "react";
+import React, {  useEffect } from "react";
 import PostCard from "./components/PostCard";
 import Link from "next/link";
+import { error } from "console";
 const interestsOptions = [
   "Programming",
   "Technology",
@@ -13,8 +14,23 @@ const interestsOptions = [
   "Sports",
 ];
 export default function Home() {
-  const { data } = api.post.getPosts.useQuery();
+  const { data, refetch } = api.post.getPosts.useQuery();
+  useEffect( () => {
+    const fetchData = async () => {
+      try {
+        await refetch();
+      } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error('Error when refetching data:', error);
+      }
+    };
+  
+    fetchData().catch((error)=>{
+      console.error("Error during uploadSelectedFile:", error);
+    })
+  }, [data]);
   if (!data) return;
+
   return (
     <>
       <div className="mx-auto w-screen ">
@@ -24,7 +40,7 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <>
-          <div className="w-full py-9 bg-yellow-400 font-sans">
+          <div className="w-full bg-yellow-400 py-9 font-sans">
             <div className="m-auto  max-w-7xl">
               <div className="flex  items-center lg:py-0">
                 <div className="mx-4 space-y-5 py-10">

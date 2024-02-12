@@ -1,11 +1,13 @@
 import React from "react";
 import Link from "next/link";
-import { RouterOutputs } from "~/utils/api";
+import { RouterOutputs, api } from "~/utils/api";
 import { IoMdBook } from "react-icons/io";
 
 type inputType = RouterOutputs["post"]["getPostbyCategories"];
 //
 const PostIntroduction = ({ post }: { post: inputType }) => {
+
+
   return (
     <div className="grid grid-cols-1 space-x-1  p-2 font-sans sm:grid-cols-2 md:gap-6 md:p-6 lg:grid-cols-3 ">
       {post?.map((a) => {

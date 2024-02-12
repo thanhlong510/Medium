@@ -1,6 +1,7 @@
 import React from "react";
 import MultiSelectCategory from "../components/MultiSelectCategory";
 import { FaRegImages } from "react-icons/fa";
+import TipTap from "./TipTap";
 interface WriteStoryProps {
   title: string;
   description: string;
@@ -8,17 +9,18 @@ interface WriteStoryProps {
   isSubmitting: boolean;
   selectedInterests: string[];
   buttonName?: string;
+  setContent: (a: string) => void;
   handleInterestToggle: (interest: string) => void;
   handleTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  handleContentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleContentChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleSubmit: () => void;
 }
 const WritePost: React.FC<WriteStoryProps> = ({
   title,
   content,
   description,
-  handleContentChange,
+  setContent,
   handleDescriptionChange,
   handleInterestToggle,
   handleSubmit,
@@ -61,13 +63,14 @@ const WritePost: React.FC<WriteStoryProps> = ({
             placeholder="Post Description ..."
           />
 
-          <textarea
+          {/* <textarea
             id="content"
             className="mt-1 h-auto min-h-[200px] w-full resize-none rounded py-2 text-xl font-normal focus:outline-none"
             value={content}
             placeholder="Create your content ..."
             onChange={handleContentChange}
-          />
+          /> */}
+          <TipTap content={content} setContent={setContent}/>
         </div>
       </div>
       <button

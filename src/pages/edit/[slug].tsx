@@ -76,7 +76,7 @@ const EditPage = () => {
       if(session?.user.id !== userId) return;
   return (
     <div className=' '>
-       <WritePost buttonName="Update" content={content} description={description} handleContentChange={handleContentChange} handleDescriptionChange={handleDescriptionChange} handleInterestToggle={handleInterestToggle} handleSubmit={handleSubmit} handleTitleChange={handleTitleChange} isSubmitting={isSubmitting} selectedInterests={selectedInterests} title={title} />
+       <WritePost  buttonName="Update" content={content} description={description} setContent={setContent} handleDescriptionChange={handleDescriptionChange} handleInterestToggle={handleInterestToggle} handleSubmit={handleSubmit} handleTitleChange={handleTitleChange} isSubmitting={isSubmitting} selectedInterests={selectedInterests} title={title} />
     </div>
   )
 };

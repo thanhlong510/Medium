@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { use } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -7,13 +7,14 @@ import { FaSignInAlt } from "react-icons/fa";
 import { api } from "~/utils/api";
 const Header = () => {
   const { data: session, status } = useSession();
-  const { data: avatarImage } = api.profile.getAvataruser.useQuery({
-    fileName: `${session?.user.id}avatar`,
+  const { data: userDatalogin } = api.profile.getBio.useQuery({
+    userId: session?.user.id ?? "",
   });
+
   return (
     <div>
       <div className="fixed left-0 right-0 top-0 z-10 mx-auto w-full border-b border-solid border-[#242424] bg-yellow-400">
-        <header className=" z-10  mx-auto flex max-w-7xl justify-between  p-5">
+        <header className=" z-10  mx-auto flex max-w-7xl items-center justify-between  p-5">
           <div className="flex">
             <Link href="/">
               <img
@@ -22,7 +23,7 @@ const Header = () => {
                 src="/Medium_(website)_logo.svg"
               />
             </Link>
-            <div className="ml-5   hidden items-center space-x-5 md:inline-flex">
+            <div className="ml-5  hidden items-center space-x-5 py-1 text-slate-800 md:inline-flex">
               <h3> About</h3>
               {status == "authenticated" ? (
                 <Link href={`/profile/${session.user.id}`}>
@@ -32,10 +33,6 @@ const Header = () => {
               ) : (
                 <h3>Contact</h3>
               )}
-              <h3 className="rounded-full bg-green-600 px-4 py-1 text-white">
-                {" "}
-                Follow
-              </h3>
             </div>
           </div>
 
@@ -44,26 +41,34 @@ const Header = () => {
 
             {status == "authenticated" ? (
               <div className="flex items-center justify-between space-x-5">
-                <Link href="/writestory" className="flex items-center space-x-1">
+                <Link
+                  href="/writestory"
+                  className="flex items-center space-x-1"
+                >
                   <BsPencilSquare className="h-[20px] w-[20px]" />
                   <h3 className="  py-[3px] text-sm">Write</h3>
                 </Link>
                 <div>
                   <Link href={`/profile/${session.user.id}`}>
-                  <img
-                    src={
-                      Array.isArray(avatarImage)
-                        ? avatarImage[0]
-                        : avatarImage ?? "/download.png"
-                    }
-                    className="h-[40px] w-[40px] rounded-full"
-                  />
+                    {userDatalogin?.avatarImage == null ||
+                    userDatalogin?.avatarImage == "{}" ||
+                    userDatalogin?.avatarImage == "" ||
+                    userDatalogin?.avatarImage == undefined ? (
+                      <img
+                        src={session.user.image ?? ""}
+                        className="h-[40px] w-[40px] rounded-full"
+                      />
+                    ) : (
+                      <img
+                        src={userDatalogin?.avatarImage ?? ""}
+                        className="h-[40px] w-[40px] rounded-full"
+                      />
+                    )}
                   </Link>
-                  
                 </div>
               </div>
             ) : (
-              <h3 className="rounded-full border text-sm border-green-600 px-4 py-1">
+              <h3 className="rounded-full border border-green-600 px-4 py-1 text-sm">
                 Get Started
               </h3>
             )}

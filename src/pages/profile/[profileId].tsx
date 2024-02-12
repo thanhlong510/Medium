@@ -33,9 +33,9 @@ const ProfilePage = () => {
   const { data: bioData } = api.profile.getBio.useQuery({
     userId: profileId,
   });
-  const {data: avatarImage} = api.profile.getAvataruser.useQuery({
-  fileName:`${profileId}avatar`
-  })
+  const { data: avatarImage } = api.profile.getAvataruser.useQuery({
+    fileName: `${profileId}avatar`,
+  });
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
   const handleOpenEditProfile = () => {
@@ -61,111 +61,135 @@ const ProfilePage = () => {
       setShowdata(postHidedata);
     }
   };
-if(bioData)
-  return (
-    <div className=" mx-auto sm:max-w-72 md:max-w-screen-md  lg:max-w-2xl ">
-      <div className="mx-auto flex w-full  flex-col py-8 ">
-        <div className="flex flex-col gap-5  ">
-          <div className="flex flex-col gap-5">
-            <div className="flex items-center justify-between">
-              <div className="flex-shrink-0 rounded-full border-[2px] border-solid">
-                <img
-                  src={Array.isArray(avatarImage) ? avatarImage[0] : avatarImage }
-                  alt={``}
-                  className="h-[112px] w-[112px] rounded-full object-cover p-[3px]"
-                />
-              </div>
+  console.log(avatarImage)
+  if (bioData)
+    return (
+      <div className=" mx-auto max-w-96 sm:max-w-sm md:max-w-screen-md  lg:max-w-2xl ">
+        <div className="mx-auto flex w-full  flex-col py-8 ">
+          <div className="flex flex-col gap-5  ">
+            <div className="flex flex-col gap-5">
+              <div className="flex items-center justify-between">
+                <div className="flex-shrink-0 rounded-full border-[2px] border-solid">
+                  {avatarImage == "undefined" ? (
+                    <img
+                      src={
+                       session?.user.image ?? ''
+                      }
+                      alt={``}
+                      className="h-[90px] w-[90px] sm:h-[112px] sm:w-[112px] rounded-full object-cover p-[3px]"
+                    />
+                  ) : (
+                    <img
+                      src={
+                        Array.isArray(avatarImage)
+                          ? avatarImage[0]
+                          : avatarImage
+                      }
+                      alt={``}
+                      className="h-[112px] w-[112px] rounded-full object-cover p-[3px]"
+                    />
+                  )}
+                </div>
 
-              <div>
-                <div className="flex items-center justify-end gap-2">
-                  <div className="flex flex-row items-center gap-2 ">
-                    {session?.user.id == profileId ? (
-                    <div>
-                      <button
-                        onClick={handleOpenEditProfile}
-                        className="relative flex h-[40px] w-[40px] items-center overflow-hidden rounded-full border-2 first-line:border-blue-500"
-                      >
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <svg
-                            className="h-[40px] w-[40px] pl-2 pt-2 text-blue-500"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            viewBox="0 0 24 24"
+                <div>
+                  <div className="flex items-center justify-end gap-2">
+                    <div className="flex flex-row items-center gap-2 ">
+                      {session?.user.id == profileId ? (
+                        <div>
+                          <button
+                            onClick={handleOpenEditProfile}
+                            className="relative flex h-[40px] w-[40px] items-center overflow-hidden rounded-full border-2 first-line:border-blue-500"
                           >
-                            <GoPencil />
-                          </svg>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <svg
+                                className="h-[40px] w-[40px] pl-2 pt-2 text-blue-500"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                viewBox="0 0 24 24"
+                              >
+                                <GoPencil />
+                              </svg>
+                            </div>
+                          </button>
+                          <EditProfileForm
+                            router={profileId}
+                            bioData={bioData}
+                            isOpen={isEditProfileOpen}
+                            onClose={handleCloseEditProfile}
+                          />
                         </div>
-                      </button>
-                      <EditProfileForm router={profileId} bioData={bioData} isOpen={isEditProfileOpen} onClose={handleCloseEditProfile} />
-                      </div>
-                      
-                    ) : (
-                      ""
-                    )}
-                    
-                    {postData == undefined ? "" : <SearchBar data={postData} />}
+                      ) : (
+                        ""
+                      )}
+
+                      {postData == undefined ? (
+                        ""
+                      ) : (
+                        <SearchBar data={postData} />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <div className="flex flex-col gap-2 ">
+            <h1 className="space-[.41px] text-3xl font-bold">
+              {profileData?.name}
+            </h1>
+            <p className="cursor-pointer space-x-[.2px] text-base font-bold text-orange-600 hover:underline">
+              <span className="hidden sm:inline-block"> Email:
+                </span> {profileData?.email}
+            </p>
+            <div className="text-sm font-normal text-gray-400">
+              {bioData?.bio}
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-2 ">
-          <h1 className="space-[.41px] text-3xl font-bold">
-            {profileData?.name}
-          </h1>
-          <p className="cursor-pointer space-x-[.2px] text-base font-bold text-orange-600 hover:underline">
-            Email: {profileData?.email}
-          </p>
-          <div className="text-sm font-normal text-gray-400">
-            {bioData?.bio}
+        <div className=" mx-auto w-full">
+          <div className="flex h-10 items-center justify-between border-b border-gray-400 ">
+            <button
+              onClick={() => {
+                handleBold("1");
+              }}
+              className={`flex h-full shrink grow basis-[1px] items-center justify-center px-3 font-semibold text-gray-400 hover:bg-gray-100 hover:text-slate-800  ${
+                bold == "1" ? "border-b-[3px] border-black" : ""
+              } `}
+            >
+              <div>Post</div>
+            </button>
+            <button
+              onClick={() => {
+                handleBold("2");
+              }}
+              className={`flex h-full shrink grow basis-[1px] items-center justify-center px-3 font-semibold text-gray-400 hover:bg-gray-100 hover:text-slate-800  ${
+                bold == "2" ? "border-b-[3px] border-black" : ""
+              } `}
+            >
+              <div>Saved</div>
+            </button>
+            <button
+              onClick={() => {
+                handleBold("3");
+              }}
+              className={`flex h-full shrink grow basis-[1px] items-center justify-center px-3 font-semibold text-gray-400 hover:bg-gray-100 hover:text-slate-800  ${
+                bold == "3" ? "border-b-[3px] border-black" : ""
+              } `}
+            >
+              <div>Favourite</div>
+            </button>
+          </div>
+          <div className="flex justify-between ">
+            <div className="shrink grow">
+              {showData == undefined ? "" : <PostCard post={showData} />}
+            </div>
           </div>
         </div>
       </div>
-      <div className=" mx-auto w-full">
-        <div className="flex h-10 items-center justify-between border-b border-gray-400 ">
-          <button
-            onClick={() => {
-              handleBold("1");
-            }}
-            className={`flex h-full shrink grow basis-[1px] items-center justify-center px-3 font-semibold text-gray-400 hover:bg-gray-100 hover:text-slate-800  ${
-              bold == "1" ? "border-b-[3px] border-black" : ""
-            } `}
-          >
-            <div>Post</div>
-          </button>
-          <button
-            onClick={() => {
-              handleBold("2");
-            }}
-            className={`flex h-full shrink grow basis-[1px] items-center justify-center px-3 font-semibold text-gray-400 hover:bg-gray-100 hover:text-slate-800  ${
-              bold == "2" ? "border-b-[3px] border-black" : ""
-            } `}
-          >
-            <div>Saved</div>
-          </button>
-          <button
-            onClick={() => {
-              handleBold("3");
-            }}
-            className={`flex h-full shrink grow basis-[1px] items-center justify-center px-3 font-semibold text-gray-400 hover:bg-gray-100 hover:text-slate-800  ${
-              bold == "3" ? "border-b-[3px] border-black" : ""
-            } `}
-          >
-            <div>Favourite</div>
-          </button>
-        </div>
-        <div className="flex justify-between ">
-          <div className="shrink grow">
-            {showData == undefined ? "" : <PostCard post={showData} />}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ProfilePage;

@@ -21,7 +21,7 @@ const Discovery = () => {
   console.log(categoryName);
   if (!data) return;
   return (
-    <div className="h-[calc(100vh-75px)] bg-slate-900">
+    <div className="h-screen  bg-slate-900">
       <div className="">
         <h2 className="flex  justify-center border-b border-solid border-slate-600 py-12  text-5xl font-bold tracking-wide text-white ">
           {categoryName.toUpperCase()}

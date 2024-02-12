@@ -1,8 +1,9 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import CommentForm from "./CommentForm";
 import { useSession } from "next-auth/react";
+import { error } from "console";
 
 interface ReplyCommentProps {
   postId: string;
@@ -16,10 +17,18 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
   const [replyingCommentId, setReplyingCommentId] = useState<string | null>(
     null,
   );
-
+  useEffect(() => {
+    const fetchData = async () => {
+      await refetch();
+    };
+    try {
+      fetchData().catch((error)=>{
+        console.error("Error during uploadSelectedFile:", error);
+      });
+    } catch (error) {}
+  }, [data]);
   const handleReplyButtonClick = async (commentId: string) => {
     setReplyingCommentId((prev) => (prev === commentId ? null : commentId));
-    await refetch()
   };
 
   return (
@@ -30,7 +39,7 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
             <Link href={`/profile/${a.user?.id}`}>
               <img
                 className="mr-4 h-8 w-8 cursor-pointer rounded-full"
-                src="/download.png"
+                src={a.user?.image ?? ""}
                 alt="User Avatar"
               />
             </Link>
@@ -46,7 +55,7 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
             <p className="mb-1 text-white">{a.repliesContent}</p>
 
             <button
-              className="mt-2 cursor-pointer rounded bg-blue-500 px-4 py-2 text-white"
+              className="mt-2 cursor-pointer rounded-full bg-blue-500 px-4 py-1 text-center text-sm font-semibold text-white hover:bg-opacity-90 hover:shadow-lg  "
               onClick={() => handleReplyButtonClick(a.id)}
             >
               Reply
@@ -58,12 +67,12 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
                     <Link href={`/profile/${a.user?.id}`}>
                       <img
                         className="mr-4 h-8 w-8 cursor-pointer rounded-full"
-                        src="/download.png"
+                        src={a.user?.image ?? ""}
                         alt="User Avatar"
                       />
                     </Link>
                   </div>
-                  {b.repliesContent}
+                  <p className="text-white">{b.repliesContent}</p>
                 </div>
               );
             })}
@@ -83,4 +92,3 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
 };
 
 export default CommentList;
-

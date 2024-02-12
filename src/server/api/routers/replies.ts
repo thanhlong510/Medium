@@ -42,6 +42,7 @@ export const repliesRouter = createTRPCRouter({
             select: {
               name: true,
               id: true,
+              image:true,
             },
           },
           repliesContent: true,

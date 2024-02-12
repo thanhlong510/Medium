@@ -5,24 +5,27 @@ import { api } from "~/utils/api";
 import ToolTip from "../components/ToolTip";
 import Link from "next/link";
 import dayjs from "dayjs";
+import StarterKit from "@tiptap/starter-kit";
 import CommentForm from "../components/comment/CommentForm";
 import CommentList from "../components/comment/CommentList";
+import { Editor, EditorContent, useEditor } from "@tiptap/react";
 const Post = () => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const postId = router.query.postId as string;
   const postQuery = api.post.getPostById.useQuery({
     postId: postId,
   });
   const { data: avatarImage } = api.profile.getAvataruser.useQuery({
-    fileName: `${session?.user.id}avatar`,
+    fileName: `${postQuery.data?.userId}avatar`,
   });
   const data = postQuery.data;
+
   if (!data) return;
-  console.log(avatarImage)
+
   return (
-    <div className="-mt-10 bg-slate-900 ">
-      <article className="mx-auto mb-40 p-5 text-white sm:w-full md:max-w-3xl lg:max-w-5xl ">
+    <div className="-mt-10 h-full bg-slate-900 ">
+      <article className="mx-auto p-5 text-white sm:w-full md:max-w-3xl lg:max-w-5xl ">
         <img
           src="/postImage.webp"
           alt=""
@@ -40,9 +43,7 @@ const Post = () => {
               {avatarImage === "undefined" ? (
                 <img
                   alt=""
-                  src={
-                    session?.user.image ?? ''
-                  }
+                  src={data.user.image ?? ""}
                   className="h-10 w-10 rounded-full"
                 />
               ) : (
@@ -59,7 +60,7 @@ const Post = () => {
                 <p className="text-sm font-extralight">{data?.user.name}</p>
                 <p className="text-[#6B6B6B]">
                   Published at{" "}
-                  {`${dayjs(data.createdAt).format("YYYY-MM-DD HH:mm:ss")}`}{" "}
+                  {`${dayjs(data.createdAt).format("MMM D, YYYY")}`}{" "}
                 </p>
               </div>
             </div>
@@ -72,15 +73,24 @@ const Post = () => {
           )}
         </div>
         <div className="">
-          <p className="text-xl">{data?.content}</p>
+          <p className="text-xl">
+            <div dangerouslySetInnerHTML={{ __html: data.content ?? "" }}></div>
+          </p>
         </div>
       </article>
-      <CommentForm
-        postId={postId}
-        userId={session?.user?.id ?? ""}
-        username={session?.user?.name ?? ""}
-      />
-      <CommentList postId={postId} />
+      {status == "authenticated" ? (
+        <div>
+          <CommentForm
+          
+            postId={postId}
+            userId={session?.user?.id ?? ""}
+            username={session?.user?.name ?? ""}
+          />
+          <CommentList postId={postId} />
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

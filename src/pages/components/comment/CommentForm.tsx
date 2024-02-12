@@ -51,10 +51,10 @@ const CommentForm: React.FC<CommentFormProps> = ({
           value={comment}
         />
         <button
-          className="float-right mt-2 rounded bg-blue-500 px-4 py-2 text-white"
+          className="float-right mt-2 hover:shadow-lg hover:bg-opacity-90 bg-blue-500 px-4 py-1 font-semibold rounded-full text-white"
           onClick={handleSubmit}
         >
-          Post Reply
+         Comment
         </button>
       </div>
     </div>

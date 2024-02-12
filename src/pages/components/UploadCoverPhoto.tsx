@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { api } from "~/utils/api";
-
+import { FaRegImages } from "react-icons/fa";
 interface UploadFileProps {
-  fileName?: string
-  userId?:string
+  initfileName?: string;
+  setCoverImage: (a: string) => void;
 }
-
-
 
 export function useFileUpload() {
   return async (filename: string, file: File) => {
@@ -23,25 +20,28 @@ export function useFileUpload() {
     return upload.ok;
   };
 }
-// Lấy thời gian tạo + user Id + coverphoto 
-const UploadFile: React.FC<UploadFileProps> = ({fileName, userId}) => {
+
+const UploadFileCoppy: React.FC<UploadFileProps> = ({ initfileName, setCoverImage }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const uploadFile = useFileUpload();
-  const a =  api.profile.addAvatarImage.useMutation()
+  const fileName= initfileName + 'coverphoto' 
   useEffect(() => {
     const uploadSelectedFile = async () => {
+      
       try {
         if (!selectedFile) {
           // Handle case when no file is selected
           return;
         }
-        const uploadOk = await uploadFile(fileName ?? selectedFile.name, selectedFile);
+  
+        const uploadOk = await uploadFile(
+          fileName ?? selectedFile.name,
+          selectedFile,
+        );
         if (uploadOk) {
-          await a.mutateAsync({
-            userId:userId ?? '',
-            avatarImage:`${userId}avatar` 
-          })
+          // show success
           console.log("Upload successful");
+          setCoverImage(fileName ?? selectedFile?.name)
         } else {
           // show error
           console.error("Upload failed");
@@ -64,20 +64,22 @@ const UploadFile: React.FC<UploadFileProps> = ({fileName, userId}) => {
   };
 
   return (
-    <div>
-      <label className="relative flex cursor-pointer items-center">
-        <button className="relative z-10 rounded  p-4    focus:outline-none focus:ring">
-          Add Image
-        </button>
-
+    <div className="cursor-pointer">
+      <div className="relative mt-[60px] flex cursor-pointer items-center">
+        <div className=" flex items-center space-x-1 ">
+          <FaRegImages className="h-[20px] w-[20px]" />
+          <p className="cursor-pointer text-center text-sm font-semibold text-[#334155]">
+            Add image
+          </p>
+        </div>
         <input
           type="file"
           className="absolute left-0 top-0 z-10 h-full w-full cursor-pointer opacity-0"
           onChange={handleFileSelect}
         />
-      
-      </label>
+        <p className="ml-2 text-sm">{selectedFile?.name}</p>
+      </div>
     </div>
   );
 };
-export default UploadFile;
+export default UploadFileCoppy;

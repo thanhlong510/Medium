@@ -23,13 +23,13 @@ const SearchBar = ({ data }: { data: inputType }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <input
         type="text"
         placeholder="Search posts..."
         value={searchTerm}
         onInput={handleInput}
-        className="rounded-3xl border border-gray-300 p-2"
+        className="rounded-3xl  border border-gray-300 p-2 max-w-[60px] sm:max-w-full"
       />
       {searchTerm && (
         <div className="absolute top-9 mt-2 w-full">

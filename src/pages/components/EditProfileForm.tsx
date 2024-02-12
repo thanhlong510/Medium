@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import UploadFile from "./UploadFile";
 import { RouterOutputs, api } from "~/utils/api";
 import { FaEarthAfrica } from "react-icons/fa6";
+import { useSession } from "next-auth/react";
 type inputType = RouterOutputs["profile"]["getBio"];
 interface EditProfileFormProps {
   isOpen: boolean;
   onClose: () => void;
   bioData: inputType;
-  router?:string
+  router?: string;
 }
 
 const EditProfileForm: React.FC<EditProfileFormProps> = ({
@@ -17,21 +18,25 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
   router,
 }) => {
   const submit = api.profile.createBio.useMutation();
+
   const [bio, setBio] = useState(bioData?.bio);
-  
+  const { data: session } = useSession()
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(e.target.value);
   };
   const handleSubmit = async () => {
     try {
+      onClose();
       submit.mutate({
-        userId: router ?? '',
-        bio: bio?? "",
+        userId: router ?? "",
+        bio: bio ?? "",
       });
+     
     } catch (error) {
       console.error("Error submitting post:", error);
     } finally {
-      onClose()
+     
+      
     }
   };
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -41,10 +46,10 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
     }
   };
   const counter = bio?.length;
-  const {data:avatarImage}= api.profile.getAvataruser.useQuery({
-    fileName:`${router}avatar`
-  })
-  
+  const { data: avatarImage } = api.profile.getAvataruser.useQuery({
+    fileName: `${router}avatar`,
+  });
+
   return (
     <>
       {isOpen && (
@@ -52,7 +57,7 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
           onClick={handleOverlayClick}
           className="fixed  inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
         >
-          <div className="w-full rounded-lg border border-solid  bg-white p-4 sm:max-w-md lg:max-w-2xl">
+          <div className="w-full rounded-lg border border-solid  bg-white p-4 max-w-96 mx-2 sm:max-w-md md:max-w-2xl lg:max-w-3xl">
             <div className="flex items-center justify-between border-b border-solid pb-3  ">
               <h1 className="text-2xl font-bold ">Edit Profile</h1>
               <button
@@ -78,12 +83,28 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
             <div className="pb-5  ">
               <div className="mt-2 flex items-center justify-between text-xl">
                 <p className="mb-2  font-bold ">Profile Picture</p>
-                <button className="text-sky-800 font-medium">
-                  <UploadFile fileName={`${router}avatar`}/>
+                <button className="font-medium text-sky-800">
+                  <UploadFile fileName={`${router}avatar`} userId={router}/>
                 </button>
               </div>
               <div className="mx-auto flex  h-[168px] w-[168px]">
-                <img className="rounded-full " alt='' src={Array.isArray(avatarImage) ? avatarImage[0] : avatarImage ?? "/download.png"} />
+                {avatarImage == "undefined"? <img
+                  className="rounded-full "
+                  alt=""
+                  src={
+                   session?.user.image ?? ''
+                  }
+                />:
+                <img
+                className="rounded-full "
+                alt=""
+                src={
+                  Array.isArray(avatarImage)
+                    ? avatarImage[0]
+                    : avatarImage ?? "/download.png"
+                }
+              />}
+               
               </div>
             </div>
             <div className="pb-5  ">
@@ -92,43 +113,38 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({
                 <textarea
                   id="bio"
                   className=" mx-auto h-[150px] w-3/4 resize-none rounded bg-slate-200 p-2 focus:outline-none "
-                  value={bio}
+                  value={bio ?? ''}
                   onChange={handleBioChange}
                   placeholder="Describe who you are"
                 />
-                <span className="absolute bottom-0 right-0 text-slate-700">
+                <span className="absolute -bottom-6 right-0 md:bottom-0 md:right-0 text-slate-700">
                   Words : {counter}
                 </span>
               </div>
             </div>
             <div className="flex w-full justify-center">
-            <div className="flex space-x-4 items-center">
-                <div className="flex space-x-2 items-center">
-                <FaEarthAfrica className="h-[20px] w-[20px]" />
-            <p className="text-slate-600">
-                Public
-            </p>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <FaEarthAfrica className="h-[20px] w-[20px]" />
+                  <p className="text-slate-600">Public</p>
                 </div>
-           
-            <div className="flex space-x-1">
-            <button
-                onClick={onClose}
-                className=" font-semibold rounded-lg bg-slate-600 px-4 py-[6px]   text-white hover:bg-green-600"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                className="  font-semibold rounded-lg bg-blue-700 px-4 py-[6px]  text-white hover:bg-green-600"
-              >
-                Save
-              </button>
+
+                <div className="flex space-x-1">
+                  <button
+                    onClick={onClose}
+                    className=" rounded-lg bg-slate-600 px-4 py-[6px] font-semibold   text-white hover:bg-green-600"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSubmit}
+                    className="  rounded-lg bg-blue-700 px-4 py-[6px] font-semibold  text-white hover:bg-green-600"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
             </div>
-             
-              
-            </div>
-            </div>
-            
           </div>
         </div>
       )}
