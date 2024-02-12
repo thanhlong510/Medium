@@ -25,21 +25,7 @@ const getFile = async (a: string) => {
     return signedUrl;
   }
 };
-const getisFileTest = async (a: string) => {
-  const file = storage.bucket("medium-blog-project").file(`${a}`);
 
-  const [signedUrl] = await file.getSignedUrl({
-    action: "read",
-    expires: Date.now() + 300 * 1000,
-  });
-
-  const b = await file.exists();
-  if (!b[0]) {
-    return b[0]
-  } else {
-    return [signedUrl];
-  }
-};
 export const profileRouter = createTRPCRouter({
   getAvataruser: publicProcedure
     .input(z.object({ fileName: z.string() }))
@@ -49,7 +35,6 @@ export const profileRouter = createTRPCRouter({
   getinforProfilebyUserId: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      
       return ctx.db.user.findUnique({
         where: {
           id: input.userId,
@@ -96,43 +81,43 @@ export const profileRouter = createTRPCRouter({
         },
         select: {
           bio: true,
-          avatarImage:true,
+          avatarImage: true,
           user: {
             select: {
               email: true,
               name: true,
               image: true,
-              id:true
+              id: true,
             },
           },
         },
       });
     }),
-  addAvatarImage:publicProcedure
-  .input(z.object({userId:z.string(),avatarImage:z.string()}))
-  .mutation(async ({ ctx, input }) => {
-    const avatarImage = await getFile(`${input.userId}avatar`)
-    const bioData = await ctx.db.bio.findUnique({
-      where: {
-        userId: input.userId,
-      },
-    });
-    if (!bioData) {
-      return ctx.db.bio.create({
-        data: {
-          userId: input.userId,
-          avatarImage: avatarImage
-        },
-      });
-    } else {
-      return ctx.db.bio.update({
+  addAvatarImage: publicProcedure
+    .input(z.object({ userId: z.string(), avatarImage: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const avatarImage = await getFile(`${input.userId}avatar`);
+      const bioData = await ctx.db.bio.findUnique({
         where: {
           userId: input.userId,
         },
-        data: {
-          avatarImage: avatarImage
-        },
       });
-    }
-  })
+      if (!bioData) {
+        return ctx.db.bio.create({
+          data: {
+            userId: input.userId,
+            avatarImage: avatarImage,
+          },
+        });
+      } else {
+        return ctx.db.bio.update({
+          where: {
+            userId: input.userId,
+          },
+          data: {
+            avatarImage: avatarImage,
+          },
+        });
+      }
+    }),
 });

@@ -40,7 +40,7 @@ const Post = () => {
         <div className="mb-10 flex items-center justify-between space-x-12 ">
           <Link href={`/profile/${data.userId}`}>
             <div className="flex items-center  space-x-4 ">
-              {avatarImage === "undefined" ? (
+              {avatarImage === "" ? (
                 <img
                   alt=""
                   src={data.user.image ?? ""}
@@ -81,12 +81,32 @@ const Post = () => {
       {status == "authenticated" ? (
         <div>
           <CommentForm
-          
+            avatarImage={
+             
+              avatarImage == null ||
+              avatarImage  == "{}" ||
+              avatarImage  == "" ||
+              avatarImage  == undefined 
+                ? data.user.image
+                : Array.isArray(avatarImage)
+                  ? avatarImage[0]
+                  : avatarImage
+            }
             postId={postId}
             userId={session?.user?.id ?? ""}
             username={session?.user?.name ?? ""}
           />
-          <CommentList postId={postId} />
+          <CommentList avatarImageofReplier= {
+             
+             avatarImage == null ||
+             avatarImage  == "{}" ||
+             avatarImage  == "" ||
+             avatarImage  == undefined 
+               ? data.user.image
+               : Array.isArray(avatarImage)
+                 ? avatarImage[0]
+                 : avatarImage
+           } postId={postId} />
         </div>
       ) : (
         ""

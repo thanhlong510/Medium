@@ -31,7 +31,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
       <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
         disabled={!editor.can().chain().focus().toggleStrike().run()}
-        className={editor.isActive("underline") ? "bg-slate-500 p-2  " : "p-2"}
+        className={editor.isActive("strike") ? "bg-slate-500 p-2  " : "p-2"}
       >
         <FaStrikethrough className="h-4 w-4" />
       </button>

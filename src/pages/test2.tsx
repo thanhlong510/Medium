@@ -1,4 +1,5 @@
 import { api } from "~/utils/api";
+import UploadFile from "./components/UploadFile";
 
 
 
@@ -9,7 +10,7 @@ export default function Home() {
   console.log(a?.avatarImage)
     return (
       <div className='mt-[100px]'>
-      
+      <UploadFile />
       </div>
  
     )

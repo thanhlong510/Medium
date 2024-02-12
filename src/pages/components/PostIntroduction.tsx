@@ -6,8 +6,6 @@ import { IoMdBook } from "react-icons/io";
 type inputType = RouterOutputs["post"]["getPostbyCategories"];
 //
 const PostIntroduction = ({ post }: { post: inputType }) => {
-
-
   return (
     <div className="grid grid-cols-1 space-x-1  p-2 font-sans sm:grid-cols-2 md:gap-6 md:p-6 lg:grid-cols-3 ">
       {post?.map((a) => {
@@ -33,11 +31,22 @@ const PostIntroduction = ({ post }: { post: inputType }) => {
                       <span>5 min read</span>
                     </div>
                   </div>
-                  <img
-                    className="h-12 w-12 rounded-full"
-                    src={`${a.user?.image}`}
-                    alt=""
-                  />
+                  {a.user.bio?.avatarImage == null ||
+                  a.user.bio?.avatarImage == "{}" ||
+                  a.user.bio?.avatarImage == "" ||
+                  a.user.bio?.avatarImage == undefined ? (
+                    <img
+                      className="h-12 w-12 rounded-full"
+                      src={`${a.user?.image}`}
+                      alt=""
+                    />
+                  ) : (
+                    <img
+                      className="h-12 w-12 rounded-full"
+                      src={`${a.user.bio?.avatarImage}`}
+                      alt=""
+                    />
+                  )}
                 </div>
               </div>
             </Link>

@@ -85,21 +85,21 @@ const MultiSelectCategory: React.FC<MultiSelectCategoryProps> = ({
         </div>
 
         {isDropdownOpen && (
-          <div className="w-250 absolute left-4 top-full z-10 rounded-xl border border-gray-300 bg-white">
+          <div className="w-250 absolute left-4 flex-row top-full font-semibold  text-sm z-10 rounded-xl border border-gray-300  bg-white">
             {availableInterests?.map((interest) => (
               <div
                 key={interest}
-                className={`cursor-pointer p-2 font-semibold ${
+                className={`cursor-pointer  p-2 px-4 font-semibold ${
                   selectedInterests.includes(interest)
-                    ? "selected bg-gray-300"
+                    ? "selected bg-gray-30 " 
                     : ""
                 }`}
                 onClick={() => handleInterestToggle(interest)}
                 onMouseEnter={(e) =>
                   e.currentTarget.classList.add(
-                    "hover:bg-green-400",
+                    "hover:bg-gray-100",
                     "hover:rounded-xl",
-                    "text-white",
+                    
                   )
                 }
                 onMouseLeave={(e) =>

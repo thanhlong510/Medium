@@ -58,7 +58,8 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="mx-auto grid max-w-6xl  pt-10 sm:grid-cols-1 md:grid-cols-1  lg:grid-cols-11">
+       
+          <div className="mx-auto  grid max-w-6xl  pt-10 sm:grid-cols-1 md:grid-cols-1  lg:grid-cols-11">
             <div className="mx-auto sm:col-span-1 md:col-span-1   lg:col-span-7  ">
               <div className="flex flex-col gap-3 p-2 ">
                 <div className="max-w-[40rem]">

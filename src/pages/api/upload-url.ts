@@ -6,7 +6,6 @@ export default async function handler(
   res: NextApiResponse<SignedPostPolicyV4Output | string>
 ) {
   const { query} = req;
-
   const storage = new Storage({
     projectId: "sortable-ai",
     credentials: {
@@ -17,10 +16,9 @@ export default async function handler(
   const bucket = storage.bucket("medium-blog-project");
   const file = bucket.file(query.file as string);
   const options = {
-    expires: Date.now() + 5 * 60 * 1000, //  5 minutes,
+    expires: Date.now() + 5 * 60 * 1000000, 
     fields: { "x-goog-meta-source": "nextjs-project" },
   };
   const [response] = await file.generateSignedPostPolicyV4(options);
-  console.log(response)
   res.status(200).json(response);
 }

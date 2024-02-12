@@ -7,9 +7,10 @@ import { error } from "console";
 
 interface ReplyCommentProps {
   postId: string;
+  avatarImageofReplier?:string
 }
 
-const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
+const CommentList: React.FC<ReplyCommentProps> = ({ postId, avatarImageofReplier }) => {
   const { data: session } = useSession();
   const { data, refetch } = api.replies.getReplies.useQuery({
     postId: postId,
@@ -36,18 +37,28 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
       {data?.map((a) => (
         <div className="ml-8 flex rounded p-4" key={a.id}>
           <div>
-            <Link href={`/profile/${a.user?.id}`}>
-              <img
-                className="mr-4 h-8 w-8 cursor-pointer rounded-full"
-                src={a.user?.image ?? ""}
+            <Link href={`/profile/${a.user?.id}`}>{
+             a.user?.bio?.avatarImage == null ||
+             a.user?.bio?.avatarImage == "{}" ||
+             a.user?.bio?.avatarImage == "" ||
+             a.user?.bio?.avatarImage == undefined ? <img
+             className="mr-4 h-10 w-10 cursor-pointer rounded-full"
+             src={a.user?.image ?? ""}
+             alt="User Avatar"
+           />:
+           <img
+                className="mr-4 h-10 w-10 cursor-pointer rounded-full"
+                src={a.user?.bio?.avatarImage ?? ""}
                 alt="User Avatar"
               />
+            }
+              
             </Link>
           </div>
 
           <div className="flex-grow">
             <Link href={`/profile/${a.user?.id}`}>
-              <p className="mb-1 cursor-pointer font-bold text-white">
+              <p className="cursor-pointer font-bold text-white">
                 {a.user?.name}
               </p>
             </Link>
@@ -67,7 +78,7 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
                     <Link href={`/profile/${a.user?.id}`}>
                       <img
                         className="mr-4 h-8 w-8 cursor-pointer rounded-full"
-                        src={a.user?.image ?? ""}
+                        src={avatarImageofReplier ?? ""}
                         alt="User Avatar"
                       />
                     </Link>
@@ -78,6 +89,7 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId }) => {
             })}
             {replyingCommentId === a.id && (
               <CommentForm
+                avatarImage={avatarImageofReplier}
                 parentId={a.id}
                 postId={postId}
                 userId={session?.user.id ?? ""}

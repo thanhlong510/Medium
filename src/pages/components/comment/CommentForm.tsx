@@ -6,6 +6,7 @@ interface CommentFormProps {
   userId: string;
   postId: string;
   parentId?: string;
+  avatarImage? : string
 }
 
 const CommentForm: React.FC<CommentFormProps> = ({
@@ -13,6 +14,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
   userId,
   postId,
   parentId,
+  avatarImage
 }) => {
   const [comment, setComment] = useState("");
   const addReplies = api.replies.create.useMutation();
@@ -35,10 +37,10 @@ const CommentForm: React.FC<CommentFormProps> = ({
   };
 
   return (
-    <div className="mx-auto mt-5 flex rounded border-t border-solid  border-slate-400 p-4 sm:w-full md:max-w-3xl lg:max-w-5xl">
+    <div className="mx-auto max-w-sm mt-5 flex rounded border-t border-solid  border-slate-400 p-4 sm:max-w-xl md:max-w-3xl lg:max-w-5xl">
       <img
         className="mr-4 mt-2 h-10 w-10 rounded-full"
-        src="/download.png"
+        src={avatarImage ?? "/download.png"}
         alt="User Avatar"
       />
       <div className="flex-grow">

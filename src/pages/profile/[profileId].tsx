@@ -64,7 +64,7 @@ const ProfilePage = () => {
   console.log(avatarImage)
   if (bioData)
     return (
-      <div className=" mx-auto max-w-96 sm:max-w-sm md:max-w-screen-md  lg:max-w-2xl ">
+      <div className=" mx-auto max-w-96 sm:max-w-md md:max-w-2xl  lg:max-w-2xl ">
         <div className="mx-auto flex w-full  flex-col py-8 ">
           <div className="flex flex-col gap-5  ">
             <div className="flex flex-col gap-5">

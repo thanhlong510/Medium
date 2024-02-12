@@ -33,7 +33,7 @@ const PostCard = ({ post }: { post: inputType }) => {
                       src="/download.png"
                     /> */}
                   </div>
-                  <div className=" font-semibold text-[#787878]">
+                  <div className=" font-semibold text-slate-500">
                     {a.user.name}
                   </div>
                 </div>
