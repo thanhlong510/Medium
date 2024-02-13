@@ -50,9 +50,9 @@ const SearchBar = ({ data }: { data: InputType }) => {
         className="rounded-3xl  border border-gray-300 p-2 max-w-[160px] sm:max-w-full"
       />
       {showDropdown && (
-        <div className="absolute top-9 mt-2 w-full" ref={dropdownRef}>
+        <div className="absolute top-9 mt-2  w-full" ref={dropdownRef}>
           {searchResults.length > 0 ? (
-            <ul className="rounded-2xl border border-gray-300 bg-white  ">
+            <ul className="rounded-2xl border max-h-[300px] overflow-auto border-gray-300 bg-white  ">
               {searchResults.map((result) => (
                 <div
                   key={result.postId}

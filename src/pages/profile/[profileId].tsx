@@ -15,14 +15,15 @@ const ProfilePage = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const profileId = router.query.profileId as string;
+ 
   const { data: postData } = api.post.getPostsbyUserId.useQuery({
-    userId: profileId,
+    userId: profileId ?? ''
   });
   const { data: postHidedata } = api.post.getHidePostbyUserId.useQuery({
-    userId: profileId,
+    userId: profileId ?? ''
   });
   const { data: postUnhidedata } = api.post.getUnhidePostbyUserId.useQuery({
-    userId: profileId,
+    userId: profileId ?? ''
   });
   const [showData, setShowdata] = useState<inputType | undefined>(
     postUnhidedata,
@@ -61,7 +62,7 @@ const ProfilePage = () => {
       setShowdata(postHidedata);
     }
   };
-  console.log(avatarImage)
+
   if (bioData)
     return (
       <div className=" mx-auto max-w-96 sm:max-w-md md:max-w-2xl  lg:max-w-2xl ">
@@ -70,10 +71,10 @@ const ProfilePage = () => {
             <div className="flex flex-col gap-5">
               <div className="flex items-center justify-between">
                 <div className="flex-shrink-0 rounded-full border-[2px] border-solid">
-                  {avatarImage == "undefined" ? (
+                  {avatarImage == "" ? (
                     <img
                       src={
-                       session?.user.image ?? ''
+                       profileData?.image ?? ''
                       }
                       alt={``}
                       className="h-[90px] w-[90px] sm:h-[112px] sm:w-[112px] rounded-full object-cover p-[3px]"
