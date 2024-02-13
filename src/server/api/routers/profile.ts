@@ -72,6 +72,23 @@ export const profileRouter = createTRPCRouter({
         });
       }
     }),
+    initialCreateBio: publicProcedure
+    .input(z.object({ userId: z.string(), bio: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const bioData = await ctx.db.bio.findUnique({
+        where: {
+          userId: input.userId,
+        },
+      });
+      if (!bioData) {
+        return ctx.db.bio.create({
+          data: {
+            userId: input.userId,
+            bio: input.bio,
+          },
+        });
+      } 
+    }),
   getBio: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {

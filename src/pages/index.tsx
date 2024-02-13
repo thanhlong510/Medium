@@ -17,7 +17,7 @@ const interestsOptions = [
 export default function Home() {
   const { data, refetch } = api.post.getPosts.useQuery();
   const { data: session } = useSession();
-  const b = api.profile.createBio.useMutation();
+  const b = api.profile.initialCreateBio.useMutation();
   const isFirstRun = useRef(true);
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +39,7 @@ export default function Home() {
       // Thực hiện lệnh chỉ một lần khi component được mount
       if (session?.user.id) {
         b.mutate({
-          bio: "",
+          bio: "This is a new welcomer",
           userId: session.user.id,
         });
       }
