@@ -7,10 +7,11 @@ import { error } from "console";
 
 interface ReplyCommentProps {
   postId: string;
-  avatarImageofReplier?:string
+  avatarImageofReplier?:string;
+  avatarImageComment?:string
 }
 
-const CommentList: React.FC<ReplyCommentProps> = ({ postId, avatarImageofReplier }) => {
+const CommentList: React.FC<ReplyCommentProps> = ({ postId, avatarImageofReplier, avatarImageComment }) => {
   const { data: session } = useSession();
   const { data, refetch } = api.replies.getReplies.useQuery({
     postId: postId,
@@ -78,7 +79,7 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId, avatarImageofReplier
                     <Link href={`/profile/${a.user?.id}`}>
                       <img
                         className="mr-4 h-8 w-8 cursor-pointer rounded-full"
-                        src={avatarImageofReplier ?? ""}
+                        src={a.user?.bio?.avatarImage ?? ""}
                         alt="User Avatar"
                       />
                     </Link>
@@ -89,7 +90,8 @@ const CommentList: React.FC<ReplyCommentProps> = ({ postId, avatarImageofReplier
             })}
             {replyingCommentId === a.id && (
               <CommentForm
-                avatarImage={avatarImageofReplier}
+
+                avatarImage={avatarImageComment}
                 parentId={a.id}
                 postId={postId}
                 userId={session?.user.id ?? ""}

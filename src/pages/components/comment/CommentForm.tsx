@@ -40,7 +40,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
     <div className="mx-auto max-w-sm mt-5 flex rounded border-t border-solid  border-slate-400 p-4 sm:max-w-xl md:max-w-3xl lg:max-w-5xl">
       <img
         className="mr-4 mt-2 h-10 w-10 rounded-full"
-        src={avatarImage ?? "/download.png"}
+        src={avatarImage ?? ""}
         alt="User Avatar"
       />
       <div className="flex-grow">

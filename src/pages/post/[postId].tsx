@@ -19,6 +19,9 @@ const Post = () => {
   const { data: avatarImage } = api.profile.getAvataruser.useQuery({
     fileName: `${postQuery.data?.userId}avatar`,
   });
+  const { data: avatarImageComment } = api.profile.getAvataruser.useQuery({
+    fileName: `${session?.user.id}avatar`,
+  });
   const data = postQuery.data;
 
   if (!data) return;
@@ -82,31 +85,43 @@ const Post = () => {
         <div>
           <CommentForm
             avatarImage={
+              avatarImageComment == null ||
+              avatarImageComment == "{}" ||
+              avatarImageComment == "" ||
+              avatarImageComment == undefined
+                ? session.user.image
+                : Array.isArray(avatarImageComment)
+                  ? avatarImageComment[0]
+                  : avatarImageComment
+            }
+            postId={postId}
+            userId={session?.user?.id ?? ""}
+            username={session?.user?.name ?? ""}
+          />
+          <CommentList
+          avatarImageComment={
              
+            avatarImageComment == null ||
+            avatarImageComment == "{}" ||
+            avatarImageComment  == "" ||
+            avatarImageComment  == undefined 
+              ? session.user.image
+              : Array.isArray( avatarImageComment)
+                ?  avatarImageComment[0]
+                :  avatarImageComment
+          }
+            avatarImageofReplier={
               avatarImage == null ||
-              avatarImage  == "{}" ||
-              avatarImage  == "" ||
-              avatarImage  == undefined 
+              avatarImage == "{}" ||
+              avatarImage == "" ||
+              avatarImage == undefined
                 ? data.user.image
                 : Array.isArray(avatarImage)
                   ? avatarImage[0]
                   : avatarImage
             }
             postId={postId}
-            userId={session?.user?.id ?? ""}
-            username={session?.user?.name ?? ""}
           />
-          <CommentList avatarImageofReplier= {
-             
-             avatarImage == null ||
-             avatarImage  == "{}" ||
-             avatarImage  == "" ||
-             avatarImage  == undefined 
-               ? data.user.image
-               : Array.isArray(avatarImage)
-                 ? avatarImage[0]
-                 : avatarImage
-           } postId={postId} />
         </div>
       ) : (
         ""
